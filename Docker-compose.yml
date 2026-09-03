@@ -1,0 +1,7 @@
+services:
+  img2pdf:
+    build: .
+    container_name: img2pdf-service
+    ports:
+      - "8000:8000"
+    restart: unless-stopped

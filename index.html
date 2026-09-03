@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pdfyier — images to PDF</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #1A1B1E;
+    --card: #2C2E33;
+    --paper: #F5F0E8;
+    --accent: #E8542B;
+    --muted: #8A8D93;
+    --border: #3A3C42;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--paper);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  main {
+    width: 100%;
+    max-width: 560px;
+  }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0 0 6px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+
+  p.sub {
+    color: var(--muted);
+    margin: 0 0 32px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .dropzone {
+    border: 1.5px dashed var(--border);
+    border-radius: 10px;
+    padding: 48px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .dropzone.drag-over {
+    border-color: var(--accent);
+    background: rgba(232, 84, 43, 0.06);
+  }
+
+  .dropzone .icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+    opacity: 0.8;
+  }
+
+  .dropzone .primary {
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
+  .dropzone .primary strong {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .dropzone .secondary {
+    font-size: 13px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  input[type="file"] { display: none; }
+
+  #file-list {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .file-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--card);
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  .file-row .page-num {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--muted);
+    font-size: 12px;
+    min-width: 18px;
+  }
+
+  .file-row .name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .file-row .size {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .file-row .remove {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0 4px;
+    line-height: 1;
+  }
+
+  .file-row .remove:hover { color: var(--accent); }
+
+  .actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  button.convert {
+    background: var(--accent);
+    color: var(--paper);
+    border: none;
+    border-radius: 6px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.15s ease;
+  }
+
+  button.convert:hover:not(:disabled) { opacity: 0.9; }
+
+  button.convert:disabled {
+    background: var(--border);
+    color: var(--muted);
+    cursor: not-allowed;
+  }
+
+  button.clear {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  button.clear:hover { color: var(--paper); }
+
+  .status {
+    margin-top: 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    min-height: 18px;
+  }
+
+  .status.error { color: var(--accent); }
+  .status.success { color: #7FB069; }
+
+  footer {
+    margin-top: 40px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">pdfyier</p>
+  <h1>Turn images into one PDF</h1>
+  <p class="sub">Drop images below in the order you want them to appear. Nothing is stored — files are converted and discarded.</p>
+
+  <div class="dropzone" id="dropzone">
+    <div class="icon">&#8595;</div>
+    <div class="primary"><strong>Choose files</strong> or drag them here</div>
+    <div class="secondary">JPG · PNG · WEBP · BMP · TIFF — up to 20MB each</div>
+    <input type="file" id="file-input" multiple accept=".jpg,.jpeg,.png,.webp,.bmp,.tiff,.gif">
+  </div>
+
+  <div id="file-list"></div>
+
+  <div class="actions" id="actions" style="display:none;">
+    <button class="convert" id="convert-btn">Convert to PDF</button>
+    <button class="clear" id="clear-btn">Clear all</button>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <footer>Powered by ImageMagick</footer>
+</main>
+
+<script>
+  // Point this at your deployed API. Defaults to localhost for local testing.
+  const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:8000'
+    : 'https://pdf.latesailor.dev'; // update after deploy
+
+  const MAX_FILE_SIZE = 20 * 1024 * 1024;
+
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('file-input');
+  const fileListEl = document.getElementById('file-list');
+  const actionsEl = document.getElementById('actions');
+  const convertBtn = document.getElementById('convert-btn');
+  const clearBtn = document.getElementById('clear-btn');
+  const statusEl = document.getElementById('status');
+
+  let files = [];
+
+  dropzone.addEventListener('click', () => fileInput.click());
+
+  dropzone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('drag-over');
+  });
+
+  dropzone.addEventListener('dragleave', () => {
+    dropzone.classList.remove('drag-over');
+  });
+
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('drag-over');
+    addFiles(Array.from(e.dataTransfer.files));
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    addFiles(Array.from(e.target.files));
+    fileInput.value = '';
+  });
+
+  function addFiles(newFiles) {
+    const imageFiles = newFiles.filter(f => f.type.startsWith('image/'));
+    files = files.concat(imageFiles);
+    render();
+  }
+
+  function removeFile(idx) {
+    files.splice(idx, 1);
+    render();
+  }
+
+  function formatSize(bytes) {
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+
+  function render() {
+    fileListEl.innerHTML = '';
+    files.forEach((f, idx) => {
+      const row = document.createElement('div');
+      row.className = 'file-row';
+
+      const oversized = f.size > MAX_FILE_SIZE;
+
+      row.innerHTML = `
+        <span class="page-num">${idx + 1}</span>
+        <span class="name">${f.name}</span>
+        <span class="size" style="${oversized ? 'color:var(--accent)' : ''}">${formatSize(f.size)}${oversized ? ' — too large' : ''}</span>
+        <button class="remove" data-idx="${idx}">&times;</button>
+      `;
+      fileListEl.appendChild(row);
+    });
+
+    fileListEl.querySelectorAll('.remove').forEach(btn => {
+      btn.addEventListener('click', () => removeFile(parseInt(btn.dataset.idx)));
+    });
+
+    actionsEl.style.display = files.length ? 'flex' : 'none';
+    convertBtn.disabled = files.length === 0;
+
+    if (!files.length) statusEl.textContent = '';
+  }
+
+  clearBtn.addEventListener('click', () => {
+    files = [];
+    render();
+    statusEl.textContent = '';
+    statusEl.className = 'status';
+  });
+
+  convertBtn.addEventListener('click', async () => {
+    const oversized = files.filter(f => f.size > MAX_FILE_SIZE);
+    if (oversized.length) {
+      statusEl.textContent = `Remove oversized files first (${oversized.map(f => f.name).join(', ')})`;
+      statusEl.className = 'status error';
+      return;
+    }
+
+    convertBtn.disabled = true;
+    statusEl.textContent = 'Converting…';
+    statusEl.className = 'status';
+
+    const formData = new FormData();
+    files.forEach(f => formData.append('files', f));
+
+    try {
+      const res = await fetch(`${API_URL}/convert`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ detail: 'Conversion failed' }));
+        throw new Error(err.detail || 'Conversion failed');
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'output.pdf';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+
+      statusEl.textContent = 'Done — download started.';
+      statusEl.className = 'status success';
+    } catch (err) {
+      statusEl.textContent = err.message;
+      statusEl.className = 'status error';
+    } finally {
+      convertBtn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
