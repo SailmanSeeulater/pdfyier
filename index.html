@@ -1,167 +1,568 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
-</head>
-<body>
-<x-dc>
-<helmet>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pdfyier — images to PDF</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  * { box-sizing: border-box; }
   body { margin: 0; }
   a { color: #2A211A; text-decoration: none; }
   a:hover { color: #F62440; }
+
   @keyframes slideInPanel { from { transform: translateX(100%); } to { transform: translateX(0); } }
   @keyframes fadeInBackdrop { from { opacity: 0; } to { opacity: 1; } }
+
   * { scrollbar-width: thin; scrollbar-color: #F62440 #FFFAF3; }
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: #FFFAF3; }
   ::-webkit-scrollbar-thumb { background: #F62440; border: 2px solid #FFFAF3; border-radius: 0; }
   ::-webkit-scrollbar-thumb:hover { background: #C81D34; }
+
+  body {
+    min-height: 100vh;
+    background: #FFFAF3;
+    color: #2A211A;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 28px 64px;
+  }
+
+  header.topbar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(42,33,26,0.14);
+    padding-bottom: 16px;
+    margin-bottom: 48px;
+  }
+
+  .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+  }
+
+  .clock {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: #8A7B6C;
+  }
+
+  .eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: #8A7B6C;
+    margin: 0 0 8px;
+  }
+
+  .title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0;
+    flex: 1;
+    min-width: 280px;
+  }
+
+  .explain-btn {
+    background: none;
+    border: 1px solid rgba(42,33,26,0.28);
+    color: #8A7B6C;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: 'Space Mono', monospace;
+    cursor: pointer;
+    padding: 6px 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .explain-btn:hover {
+    color: #2A211A;
+    border-color: rgba(42,33,26,0.3);
+  }
+
+  p.sub {
+    color: #8A7B6C;
+    margin: 0 0 40px;
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 520px;
+  }
+
+  .dropzone {
+    border: 1px dashed rgba(42,33,26,0.28);
+    padding: 56px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .dropzone:hover, .dropzone.drag-over {
+    border-color: #F62440;
+  }
+
+  .dropzone .primary {
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+    font-family: 'Space Mono', monospace;
+    text-transform: uppercase;
+  }
+
+  .dropzone .primary .muted { color: #8A7B6C; text-transform: none; letter-spacing: normal; }
+
+  .dropzone .secondary {
+    font-size: 12px;
+    color: #8A7B6C;
+    font-family: 'Space Mono', monospace;
+  }
+
+  input[type="file"] { display: none; }
+
+  #item-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 20px;
+    margin-top: 32px;
+  }
+
+  .item {
+    cursor: grab;
+  }
+
+  .item.dragging {
+    opacity: 0.35;
+  }
+
+  .item-thumb {
+    position: relative;
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+    background-color: #FFF2DB;
+  }
+
+  .item.drag-over .item-thumb {
+    box-shadow: inset 0 0 0 2px #F62440;
+  }
+
+  .item-thumb .page-num {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    background: #FFE5BF;
+    color: #2A211A;
+    padding: 2px 6px;
+  }
+
+  .item-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(42,33,26,0.12);
+  }
+
+  .item-meta .name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .item-meta .size {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    white-space: nowrap;
+    color: #8A7B6C;
+  }
+
+  .item-meta .size.oversized { color: #F62440; }
+
+  .item-meta .remove {
+    background: none;
+    border: none;
+    color: #8A7B6C;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 0;
+    line-height: 1;
+  }
+
+  .item-meta .remove:hover { color: #F62440; }
+
+  .filename-row {
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .filename-row label {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: #8A7B6C;
+    white-space: nowrap;
+  }
+
+  .filename-input-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(42,33,26,0.24);
+    padding: 6px 0;
+  }
+
+  #filename-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: #2A211A;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    min-width: 0;
+  }
+
+  .filename-input-wrap .ext {
+    color: #8A7B6C;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+  }
+
+  .actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  button.convert {
+    background: #2A211A;
+    color: #FFFAF3;
+    border: none;
+    border-radius: 0;
+    padding: 13px 24px;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-family: 'Space Mono', monospace;
+    cursor: pointer;
+  }
+
+  button.convert:disabled {
+    background: #3A3C42;
+    color: #8A7B6C;
+    cursor: not-allowed;
+  }
+
+  button.clear-all {
+    background: none;
+    border: none;
+    color: #8A7B6C;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.04em;
+  }
+
+  button.clear-all:hover { color: #2A211A; }
+
+  .status {
+    margin-top: 18px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    min-height: 18px;
+    color: #8A7B6C;
+  }
+
+  .status.error, .status.success { color: #F62440; }
+
+  footer {
+    margin-top: 64px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(42,33,26,0.14);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  footer .links {
+    display: flex;
+    gap: 20px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8A7B6C;
+  }
+
+  footer .note {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: #8A7B6C;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* Explain panel */
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(42,33,26,0.3);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 50;
+    animation: fadeInBackdrop 0.2s ease;
+    display: none;
+  }
+
+  .backdrop.open { display: block; }
+
+  .panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 460px;
+    max-width: 90vw;
+    background: #FFF2DB;
+    border-left: 1px solid rgba(42,33,26,0.14);
+    overflow-y: auto;
+    padding: 32px;
+    animation: slideInPanel 0.28s ease;
+  }
+
+  .panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+  }
+
+  .panel-head .label {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8A7B6C;
+  }
+
+  .panel-close {
+    background: none;
+    border: none;
+    color: #8A7B6C;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .panel-close:hover { color: #2A211A; }
+
+  .panel h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 24px;
+  }
+
+  .step { margin-bottom: 22px; }
+
+  .step .num {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: #F62440;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+
+  .step .title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .step p {
+    color: #B9B7B0;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 6px;
+  }
+
+  .step pre, .panel .oneliner pre {
+    background: #FFFAF3;
+    border: 1px solid rgba(42,33,26,0.12);
+    padding: 12px 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: #2A211A;
+    overflow-x: auto;
+    margin: 8px 0 0;
+    white-space: pre;
+  }
+
+  .oneliner {
+    border-top: 1px solid rgba(42,33,26,0.14);
+    padding-top: 16px;
+    margin-top: 8px;
+  }
+
+  .oneliner .label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: #8A7B6C;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .oneliner pre {
+    margin: 0 0 12px;
+    white-space: pre-wrap;
+  }
+
+  .oneliner p {
+    color: #B9B7B0;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0;
+  }
 </style>
-</helmet>
-<div style="min-height:100vh;background:#FFFAF3;color:#2A211A;font-family:'Space Grotesk',sans-serif;">
-  <div style="max-width:760px;margin:0 auto;padding:40px 28px 64px;">
+</head>
+<body>
+<main>
 
-    <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid rgba(42,33,26,0.14);padding-bottom:16px;margin-bottom:48px;">
-      <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;letter-spacing:0.04em;">PDFYIER</span>
-      <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.04em;color:#8A7B6C;">{{ clockLabel }}</span>
-    </div>
+  <header class="topbar">
+    <span class="logo">PDFYIER</span>
+    <span class="clock" id="clock"></span>
+  </header>
 
-    <p style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.1em;color:#8A7B6C;margin:0 0 8px;">IMAGES → PDF</p>
-    <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:16px;margin-bottom:12px;">
-      <h1 style="font-size:40px;font-weight:600;letter-spacing:-0.01em;margin:0;flex:1;min-width:280px;">Turn images into one PDF.</h1>
-      <button onClick="{{ openExplain }}" style="background:none;border:1px solid rgba(42,33,26,0.28);color:#8A7B6C;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;font-family:'Space Mono',monospace;cursor:pointer;padding:6px 10px;white-space:nowrap;flex-shrink:0;" style-hover="color:#2A211A;border-color:rgba(42,33,26,0.3);">[ Explanation ]</button>
-    </div>
-    <p style="color:#8A7B6C;margin:0 0 40px;font-size:15px;line-height:1.6;max-width:520px;">Drop your images below, drag to reorder pages.</p>
+  <p class="eyebrow">IMAGES → PDF</p>
+  <div class="title-row">
+    <h1>Turn images into one PDF.</h1>
+    <button class="explain-btn" id="explain-btn">[ Explanation ]</button>
+  </div>
+  <p class="sub">Drop your images below, drag to reorder pages.</p>
 
-    <div style="border:1px dashed rgba(42,33,26,0.28);border-radius:0;padding:56px 24px;text-align:center;cursor:pointer;transition:border-color 0.15s ease,background 0.15s ease;" style-hover="border-color:rgba(42,33,26,0.3);" onClick="{{ openPicker }}" onDragOver="{{ onZoneDragOver }}" onDragLeave="{{ onZoneDragLeave }}" onDrop="{{ onZoneDrop }}">
-      <div style="font-size:13px;letter-spacing:0.06em;margin-bottom:6px;font-family:'Space Mono',monospace;text-transform:uppercase;">Select files <span style="color:#8A7B6C;">or drag them here</span></div>
-      <div style="font-size:12px;color:#8A7B6C;font-family:'Space Mono',monospace;">JPG · PNG · WEBP · BMP · TIFF — up to {{ maxSizeLabel }} each</div>
-      <input ref="{{ fileInputRef }}" type="file" multiple="{{ true }}" accept=".jpg,.jpeg,.png,.webp,.bmp,.tiff,.gif" style="display:none;" onChange="{{ onInputChange }}">
-    </div>
-
-    <sc-if value="{{ hasItems }}" hint-placeholder-val="{{ false }}">
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:20px;margin-top:32px;">
-        <sc-for list="{{ items }}" as="item" hint-placeholder-count="0">
-          <div draggable="{{ true }}" onDragStart="{{ item.onDragStart }}" onDragOver="{{ item.onDragOver }}" onDragLeave="{{ item.onDragLeave }}" onDrop="{{ item.onDrop }}" onDragEnd="{{ onDragEnd }}" style="cursor:grab;opacity:{{ item.dragOpacity }};">
-            <div style="position:relative;height:150px;background-image:{{ item.bgImage }};background-size:cover;background-position:center;background-color:#FFF2DB;box-shadow:{{ item.dropShadow }};">
-              <span style="position:absolute;top:6px;left:6px;font-family:'Space Mono',monospace;font-size:11px;background:#FFE5BF;color:#2A211A;padding:2px 6px;">{{ item.pageNum }}</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:8px;padding-top:8px;border-top:1px solid rgba(42,33,26,0.12);">
-              <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-family:'Space Mono',monospace;">{{ item.name }}</span>
-              <span style="font-size:11px;font-family:'Space Mono',monospace;color:{{ item.sizeColor }};white-space:nowrap;">{{ item.sizeLabel }}</span>
-              <button onClick="{{ item.onRemove }}" style="background:none;border:none;color:#8A7B6C;cursor:pointer;font-size:15px;padding:0;line-height:1;" style-hover="color:#F62440;">×</button>
-            </div>
-          </div>
-        </sc-for>
-      </div>
-
-      <div style="margin-top:32px;display:flex;align-items:center;gap:14px;">
-        <label style="font-family:'Space Mono',monospace;font-size:12px;color:#8A7B6C;white-space:nowrap;">File name</label>
-        <div style="flex:1;display:flex;align-items:center;border-bottom:1px solid rgba(42,33,26,0.24);padding:6px 0;">
-          <input value="{{ filename }}" onChange="{{ onFilenameChange }}" spellCheck="{{ false }}" style="flex:1;background:none;border:none;outline:none;color:#2A211A;font-family:'Space Grotesk',sans-serif;font-size:14px;min-width:0;">
-          <span style="color:#8A7B6C;font-family:'Space Mono',monospace;font-size:13px;">.pdf</span>
-        </div>
-      </div>
-
-      <div style="margin-top:24px;display:flex;gap:20px;align-items:center;">
-        <button onClick="{{ convert }}" disabled="{{ converting }}" style="{{ convertBtnStyle }}">{{ convertLabel }}</button>
-        <button onClick="{{ clearAll }}" style="background:none;border:none;color:#8A7B6C;font-size:13px;cursor:pointer;font-family:'Space Mono',monospace;letter-spacing:0.04em;" style-hover="color:#2A211A;">Clear all</button>
-      </div>
-
-      <div style="margin-top:18px;font-family:'Space Mono',monospace;font-size:13px;min-height:18px;color:{{ statusColor }};">{{ status }}</div>
-    </sc-if>
-
-    <footer style="margin-top:64px;padding-top:20px;border-top:1px solid rgba(42,33,26,0.14);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
-      <div style="display:flex;gap:20px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#8A7B6C;">
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
-        <a href="#">Help</a>
-      </div>
-      <div style="font-family:'Space Mono',monospace;font-size:11px;color:#8A7B6C;letter-spacing:0.06em;text-transform:uppercase;">{{ footerNote }}</div>
-    </footer>
-
+  <div class="dropzone" id="dropzone">
+    <div class="primary">Select files <span class="muted">or drag them here</span></div>
+    <div class="secondary">JPG · PNG · WEBP · BMP · TIFF — up to 20MB each</div>
+    <input type="file" id="file-input" multiple accept=".jpg,.jpeg,.png,.webp,.bmp,.tiff,.gif">
   </div>
 
-  <sc-if value="{{ showExplain }}" hint-placeholder-val="{{ false }}">
-    <div style="position:fixed;inset:0;background:rgba(42,33,26,0.3);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:50;animation:fadeInBackdrop 0.2s ease;" onClick="{{ closeExplain }}">
-      <div style="position:fixed;top:0;right:0;height:100vh;width:460px;max-width:90vw;background:#FFF2DB;border-left:1px solid rgba(42,33,26,0.14);overflow-y:auto;padding:32px;animation:slideInPanel 0.28s ease;" onClick="{{ stopPropagation }}">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">
-          <span style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#8A7B6C;">How it works</span>
-          <button onClick="{{ closeExplain }}" style="background:none;border:none;color:#8A7B6C;font-size:20px;cursor:pointer;line-height:1;padding:0;" style-hover="color:#2A211A;">×</button>
-        </div>
-        <h2 style="font-size:22px;font-weight:600;margin:0 0 24px;">Upload → convert → download</h2>
+  <div id="item-grid"></div>
 
-        <sc-for list="{{ steps }}" as="step" hint-placeholder-count="8">
-          <div style="margin-bottom:22px;">
-            <div style="font-family:'Space Mono',monospace;font-size:12px;color:#F62440;letter-spacing:0.04em;margin-bottom:4px;">STEP {{ step.num }}</div>
-            <div style="font-size:15px;font-weight:600;margin-bottom:6px;">{{ step.title }}</div>
-            <sc-for list="{{ step.lines }}" as="line" hint-placeholder-count="0">
-              <p style="color:#B9B7B0;font-size:14px;line-height:1.6;margin:0 0 6px;">{{ line }}</p>
-            </sc-for>
-            <sc-if value="{{ step.code }}" hint-placeholder-val="{{ false }}">
-              <pre style="background:#FFFAF3;border:1px solid rgba(42,33,26,0.12);padding:12px 14px;font-family:'Space Mono',monospace;font-size:12px;color:#2A211A;overflow-x:auto;margin:8px 0 0;white-space:pre;">{{ step.code }}</pre>
-            </sc-if>
-          </div>
-        </sc-for>
+  <div class="filename-row" id="filename-row" style="display:none;">
+    <label for="filename-input">File name</label>
+    <div class="filename-input-wrap">
+      <input type="text" id="filename-input" value="output" spellcheck="false">
+      <span class="ext">.pdf</span>
+    </div>
+  </div>
 
-        <div style="border-top:1px solid rgba(42,33,26,0.14);padding-top:16px;margin-top:8px;">
-          <div style="font-family:'Space Mono',monospace;font-size:11px;color:#8A7B6C;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;">One-line version</div>
-          <pre style="background:#FFFAF3;border:1px solid rgba(42,33,26,0.12);padding:12px 14px;font-family:'Space Mono',monospace;font-size:12px;color:#2A211A;overflow-x:auto;margin:0 0 12px;white-space:pre-wrap;">upload → nginx (TLS + size check) → FastAPI (validate + save to tmpfs)
+  <div class="actions" id="actions" style="display:none;">
+    <button class="convert" id="convert-btn">Convert to PDF</button>
+    <button class="clear-all" id="clear-btn">Clear all</button>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <footer>
+    <div class="links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Help</a>
+    </div>
+    <div class="note">Powered by ImageMagick</div>
+  </footer>
+
+</main>
+
+<div class="backdrop" id="backdrop">
+  <div class="panel" id="panel">
+    <div class="panel-head">
+      <span class="label">How it works</span>
+      <button class="panel-close" id="panel-close">&times;</button>
+    </div>
+    <h2>Upload → convert → download</h2>
+    <div id="steps"></div>
+    <div class="oneliner">
+      <div class="label">One-line version</div>
+      <pre>upload → nginx (TLS + size check) → FastAPI (validate + save to tmpfs)
        → magick CLI (decode images → render PDF pages) → FastAPI reads result
        → temp files deleted → PDF streamed back → browser downloads it</pre>
-          <p style="color:#B9B7B0;font-size:13px;line-height:1.6;margin:0;">Everything between steps 4–6 happens inside a single HTTP request/response cycle — nothing persists before or after.</p>
-        </div>
-      </div>
+      <p>Everything between steps 4–6 happens inside a single HTTP request/response cycle — nothing persists before or after.</p>
     </div>
-  </sc-if>
+  </div>
 </div>
-</x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;apiUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://pdfyier.latesailor.dev&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;maxFileSizeMb&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:20,&quot;min&quot;:1,&quot;max&quot;:100,&quot;tsType&quot;:&quot;number&quot;},&quot;footerNote&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Powered by ImageMagick&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
-class Component extends DCLogic {
-  state = {
-    items: [],
-    filename: 'output',
-    status: '',
-    statusType: '',
-    converting: false,
-    dragIdx: null,
-    dragOverIdx: null,
-    now: new Date(),
-    showExplain: false,
-  };
 
-  componentDidMount() {
-    this._fileInputEl = null;
-    this._tick = setInterval(() => this.setState({ now: new Date() }), 1000);
+<script>
+  const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+  const API_URL = isLocal ? 'http://localhost:8000' : 'https://pdfyier.latesailor.dev';
+  const MAX_FILE_SIZE = 20 * 1024 * 1024;
+
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('file-input');
+  const itemGrid = document.getElementById('item-grid');
+  const filenameRow = document.getElementById('filename-row');
+  const filenameInput = document.getElementById('filename-input');
+  const actionsEl = document.getElementById('actions');
+  const convertBtn = document.getElementById('convert-btn');
+  const clearBtn = document.getElementById('clear-btn');
+  const statusEl = document.getElementById('status');
+  const clockEl = document.getElementById('clock');
+
+  let items = []; // { id, file, url }
+  let dragIdx = null;
+
+  function updateClock() {
+    const now = new Date();
+    const date = now.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: '2-digit' });
+    const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    clockEl.textContent = `${date} ${time}`;
   }
+  updateClock();
+  setInterval(updateClock, 1000);
 
-  componentWillUnmount() {
-    clearInterval(this._tick);
-    this.state.items.forEach(it => URL.revokeObjectURL(it.url));
-  }
+  dropzone.addEventListener('click', () => fileInput.click());
+  dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('drag-over'); });
+  dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('drag-over');
+    addFiles(e.dataTransfer.files);
+  });
+  fileInput.addEventListener('change', (e) => {
+    addFiles(e.target.files);
+    fileInput.value = '';
+  });
 
-  maxFileSize() {
-    var mb = this.props.maxFileSizeMb;
-    if (mb === undefined || mb === null) mb = 20;
-    return mb * 1024 * 1024;
-  }
-
-  formatSize(bytes) {
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
-    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-  }
-
-  sanitizeFilename(name) {
-    var badChars = new RegExp('[\\\\/:*?"' + String.fromCharCode(60) + String.fromCharCode(62) + '|]', 'g');
-    var cleaned = name.trim().replace(badChars, '').replace(/\.+$/, '');
-    return cleaned || 'output';
-  }
-
-  addFiles(fileList) {
+  function addFiles(fileList) {
     const imageFiles = Array.from(fileList).filter(f => f.type.startsWith('image/'));
     if (!imageFiles.length) return;
     const newItems = imageFiles.map(f => ({
@@ -169,177 +570,174 @@ class Component extends DCLogic {
       file: f,
       url: URL.createObjectURL(f),
     }));
-    this.setState(s => ({ items: s.items.concat(newItems) }));
+    items = items.concat(newItems);
+    render();
   }
 
-  removeItem(id) {
-    this.setState(s => {
-      const target = s.items.find(it => it.id === id);
-      if (target) URL.revokeObjectURL(target.url);
-      return { items: s.items.filter(it => it.id !== id) };
+  function removeItem(id) {
+    const target = items.find(it => it.id === id);
+    if (target) URL.revokeObjectURL(target.url);
+    items = items.filter(it => it.id !== id);
+    render();
+  }
+
+  function formatSize(bytes) {
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+
+  function sanitizeFilename(name) {
+    const cleaned = name.trim().replace(/[\\/:*?"<>|]/g, '').replace(/\.+$/, '');
+    return cleaned || 'output';
+  }
+
+  function render() {
+    itemGrid.innerHTML = '';
+
+    items.forEach((it, idx) => {
+      const oversized = it.file.size > MAX_FILE_SIZE;
+
+      const el = document.createElement('div');
+      el.className = 'item';
+      el.draggable = true;
+      el.dataset.idx = idx;
+
+      el.innerHTML = `
+        <div class="item-thumb" style="background-image:url(${it.url})">
+          <span class="page-num">${idx + 1}</span>
+        </div>
+        <div class="item-meta">
+          <span class="name">${it.file.name}</span>
+          <span class="size ${oversized ? 'oversized' : ''}">${formatSize(it.file.size)}${oversized ? ' — too large' : ''}</span>
+          <button class="remove" data-id="${it.id}" aria-label="Remove">&times;</button>
+        </div>
+      `;
+
+      el.addEventListener('dragstart', () => {
+        dragIdx = idx;
+        el.classList.add('dragging');
+      });
+      el.addEventListener('dragend', () => {
+        el.classList.remove('dragging');
+        itemGrid.querySelectorAll('.item').forEach(n => n.classList.remove('drag-over'));
+      });
+      el.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        el.classList.add('drag-over');
+      });
+      el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
+      el.addEventListener('drop', (e) => {
+        e.preventDefault();
+        el.classList.remove('drag-over');
+        if (dragIdx === null || dragIdx === idx) return;
+        const [moved] = items.splice(dragIdx, 1);
+        items.splice(idx, 0, moved);
+        dragIdx = null;
+        render();
+      });
+
+      itemGrid.appendChild(el);
     });
-  }
 
-  clearAll() {
-    this.state.items.forEach(it => URL.revokeObjectURL(it.url));
-    this.setState({ items: [], filename: 'output', status: '', statusType: '' });
-  }
-
-  moveTo(fromIdx, toIdx) {
-    this.setState(s => {
-      const items = s.items.slice();
-      const [moved] = items.splice(fromIdx, 1);
-      items.splice(toIdx, 0, moved);
-      return { items, dragIdx: null, dragOverIdx: null };
+    itemGrid.querySelectorAll('.remove').forEach(btn => {
+      btn.addEventListener('click', () => removeItem(btn.dataset.id));
     });
+
+    const hasItems = items.length > 0;
+    actionsEl.style.display = hasItems ? 'flex' : 'none';
+    filenameRow.style.display = hasItems ? 'flex' : 'none';
+    convertBtn.disabled = !hasItems;
+
+    if (!hasItems) statusEl.textContent = '';
   }
 
-  async convert() {
-    const { items, filename } = this.state;
-    const oversized = items.filter(it => it.file.size > this.maxFileSize());
+  clearBtn.addEventListener('click', () => {
+    items.forEach(it => URL.revokeObjectURL(it.url));
+    items = [];
+    filenameInput.value = 'output';
+    render();
+    statusEl.textContent = '';
+    statusEl.className = 'status';
+  });
+
+  convertBtn.addEventListener('click', async () => {
+    const oversized = items.filter(it => it.file.size > MAX_FILE_SIZE);
     if (oversized.length) {
-      this.setState({ status: `Remove oversized files first (${oversized.map(f => f.file.name).join(', ')})`, statusType: 'error' });
+      statusEl.textContent = `Remove oversized files first (${oversized.map(it => it.file.name).join(', ')})`;
+      statusEl.className = 'status error';
       return;
     }
-    this.setState({ converting: true, status: 'Converting…', statusType: '' });
-    const apiUrl = this.props.apiUrl || 'https://pdfyier.latesailor.dev';
+
+    convertBtn.disabled = true;
+    convertBtn.textContent = 'Converting…';
+    statusEl.textContent = 'Converting…';
+    statusEl.className = 'status';
+
     const formData = new FormData();
     items.forEach(it => formData.append('files', it.file));
+
     try {
-      const res = await fetch(`${apiUrl}/convert`, { method: 'POST', body: formData });
+      const res = await fetch(`${API_URL}/convert`, { method: 'POST', body: formData });
+
       if (!res.ok) {
         const err = await res.json().catch(() => ({ detail: 'Conversion failed' }));
         throw new Error(err.detail || 'Conversion failed');
       }
+
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = this.sanitizeFilename(filename) + '.pdf';
+      a.download = sanitizeFilename(filenameInput.value) + '.pdf';
       document.body.appendChild(a);
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      this.setState({ status: 'Done — download started.', statusType: 'success' });
+
+      statusEl.textContent = 'Done — download started.';
+      statusEl.className = 'status success';
     } catch (err) {
-      this.setState({ status: err.message, statusType: 'error' });
+      statusEl.textContent = err.message;
+      statusEl.className = 'status error';
     } finally {
-      this.setState({ converting: false });
+      convertBtn.disabled = false;
+      convertBtn.textContent = 'Convert to PDF';
     }
-  }
+  });
 
-  renderVals() {
-    const { items, filename, status, statusType, converting, dragIdx, dragOverIdx, now } = this.state;
+  const backdrop = document.getElementById('backdrop');
+  const explainBtn = document.getElementById('explain-btn');
+  const panelClose = document.getElementById('panel-close');
+  const panel = document.getElementById('panel');
 
-    const clockLabel = now.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: '2-digit' }) + ' ' +
-      now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  explainBtn.addEventListener('click', () => backdrop.classList.add('open'));
+  panelClose.addEventListener('click', () => backdrop.classList.remove('open'));
+  backdrop.addEventListener('click', () => backdrop.classList.remove('open'));
+  panel.addEventListener('click', (e) => e.stopPropagation());
 
-    const renderedItems = items.map((it, idx) => ({
-      pageNum: idx + 1,
-      name: it.file.name,
-      sizeLabel: this.formatSize(it.file.size) + (it.file.size > this.maxFileSize() ? ' — too large' : ''),
-      sizeColor: it.file.size > this.maxFileSize() ? '#F62440' : '#8A7B6C',
-      bgImage: `url(${it.url})`,
-      dragOpacity: dragIdx === idx ? 0.35 : 1,
-      dropShadow: dragOverIdx === idx ? 'inset 0 0 0 2px #F62440' : 'none',
-      onRemove: () => this.removeItem(it.id),
-      onDragStart: () => this.setState({ dragIdx: idx }),
-      onDragOver: (e) => { e.preventDefault(); if (dragOverIdx !== idx) this.setState({ dragOverIdx: idx }); },
-      onDragLeave: () => this.setState({ dragOverIdx: null }),
-      onDrop: (e) => {
-        e.preventDefault();
-        if (dragIdx === null || dragIdx === idx) return;
-        this.moveTo(dragIdx, idx);
-      },
-    }));
+  const steps = [
+    { num: 1, title: 'Browser — user drops/selects images', lines: ["The page's JS collects the files into an items[] array (in whatever order you set via drag)."] },
+    { num: 2, title: 'Convert click — files packaged and sent', lines: ['This is an HTTPS POST with multipart/form-data — each image is a separate part in the body.'], code: "const formData = new FormData();\nitems.forEach(it => formData.append('files', it.file));\nfetch(`${API_URL}/convert`, { method: 'POST', body: formData });" },
+    { num: 3, title: 'nginx receives the request', lines: ['Terminates SSL (decrypts the HTTPS traffic)', 'Checks client_max_body_size (150M) — rejects with 413 if over', 'Proxies the request to http://localhost:8000/convert (your FastAPI container)'] },
+    { num: 4, title: 'FastAPI (main.py) receives it', lines: ['For each uploaded file, in order:', 'Checks extension against ALLOWED_EXTENSIONS', 'Reads bytes into memory (await f.read())', 'Checks per-file size (MAX_FILE_SIZE) and running total (MAX_TOTAL_SIZE)', 'Writes bytes to a RAM-backed temp file — the numbered prefix guarantees page order regardless of original filenames'], code: 'async def convert(files: list[UploadFile]):' },
+    { num: 5, title: 'ImageMagick does the actual conversion', lines: ['Shells out to the magick CLI binary. ImageMagick:', 'Reads and decodes each image file', 'Renders each one onto its own PDF page, in order', 'Writes the assembled multi-page PDF to the same temp dir'], code: 'cmd = ["magick", *paths, output_path]\nsubprocess.run(cmd, ...)' },
+    { num: 6, title: 'FastAPI reads the result back into memory', lines: ['The temp directory context exits — the entire temp folder, including all original images and the PDF, is deleted from disk/RAM immediately.'], code: 'with open(output_path, "rb") as f:\n    pdf_bytes = f.read()' },
+    { num: 7, title: 'Response streamed back to the browser', lines: ['Travels back through nginx (re-encrypted over HTTPS) to the browser.'], code: 'return Response(content=pdf_bytes, media_type="application/pdf", ...)' },
+    { num: 8, title: 'Browser triggers the download', lines: ['Creates a temporary in-browser object URL, fake-clicks a download link with your chosen filename, then revokes the URL.'], code: "const blob = await res.blob();\nconst url = URL.createObjectURL(blob);\na.download = sanitizeFilename(filenameInput.value) + '.pdf';\na.click();" },
+  ];
 
-    return {
-      clockLabel,
-      items: renderedItems,
-      hasItems: items.length > 0,
-      filename,
-      status,
-      statusColor: statusType === 'error' ? '#F62440' : statusType === 'success' ? '#F62440' : '#8A7B6C',
-      converting,
-      convertLabel: converting ? 'Converting…' : 'Convert to PDF',
-      convertBtnStyle: `background:${converting ? '#3A3C42' : '#2A211A'};color:${converting ? '#8A7B6C' : '#FFFAF3'};border:none;border-radius:0;padding:13px 24px;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;font-family:'Space Mono',monospace;cursor:${converting ? 'not-allowed' : 'pointer'};`,
-      maxSizeLabel: (this.props.maxFileSizeMb === undefined || this.props.maxFileSizeMb === null ? 20 : this.props.maxFileSizeMb) + 'MB',
-      footerNote: this.props.footerNote === undefined || this.props.footerNote === null ? 'Powered by ImageMagick' : this.props.footerNote,
-      fileInputRef: (el) => { this._fileInputEl = el; },
-      openPicker: () => this._fileInputEl && this._fileInputEl.click(),
-      onInputChange: (e) => { this.addFiles(e.target.files); e.target.value = ''; },
-      onZoneDragOver: (e) => e.preventDefault(),
-      onZoneDragLeave: () => {},
-      onZoneDrop: (e) => { e.preventDefault(); this.addFiles(e.dataTransfer.files); },
-      onDragEnd: () => this.setState({ dragIdx: null, dragOverIdx: null }),
-      onFilenameChange: (e) => this.setState({ filename: e.target.value }),
-      convert: () => this.convert(),
-      clearAll: () => this.clearAll(),
-      showExplain: this.state.showExplain,
-      openExplain: () => this.setState({ showExplain: true }),
-      closeExplain: () => this.setState({ showExplain: false }),
-      stopPropagation: (e) => e.stopPropagation(),
-      steps: [
-        {
-          num: 1,
-          title: 'Browser — user drops/selects images',
-          lines: ["index.html's JS collects the files into a files[] array (in whatever order you set via drag/arrows)."],
-        },
-        {
-          num: 2,
-          title: 'Convert click — files packaged and sent',
-          lines: ['This is an HTTPS POST with multipart/form-data — each image is a separate part in the body.'],
-          code: "const formData = new FormData();\nfiles.forEach(f => formData.append('files', f));\nfetch(`${API_URL}/convert`, { method: 'POST', body: formData });",
-        },
-        {
-          num: 3,
-          title: 'nginx receives the request',
-          lines: [
-            'Terminates SSL (decrypts the HTTPS traffic)',
-            'Checks client_max_body_size (150M) — rejects with 413 if over',
-            'Proxies the request to http://localhost:8000/convert (your FastAPI container)',
-          ],
-        },
-        {
-          num: 4,
-          title: 'FastAPI (main.py) receives it',
-          lines: ['For each uploaded file, in order:', 'Checks extension against ALLOWED_EXTENSIONS', 'Reads bytes into memory (await f.read())', 'Checks per-file size (MAX_FILE_SIZE) and running total (MAX_TOTAL_SIZE)', 'Writes bytes to a RAM-backed temp file: /tmp/<random_dir>/000_<uuid>.jpg, 001_<uuid>.jpg, etc. — the 000_/001_ prefix is what guarantees page order regardless of original filenames'],
-          code: 'async def convert(files: list[UploadFile]):',
-        },
-        {
-          num: 5,
-          title: 'ImageMagick does the actual conversion',
-          lines: [
-            'This shells out to the magick CLI binary (not a Python library — literally the same command-line tool you tested manually way back at the start). ImageMagick:',
-            'Reads each image file',
-            'Decodes it (JPEG/PNG/etc. decoder depending on format)',
-            'Renders each one onto its own PDF page, in the order given',
-            'Writes the assembled multi-page PDF to output.pdf in that same temp dir',
-          ],
-          code: 'cmd = ["magick", *paths, output_path]\nsubprocess.run(cmd, ...)',
-        },
-        {
-          num: 6,
-          title: 'FastAPI reads the result back into memory',
-          lines: ['Then the with tempfile.TemporaryDirectory() block exits — the entire temp folder, including all original images and the PDF, is deleted from disk/RAM immediately.'],
-          code: 'with open(output_path, "rb") as f:\n    pdf_bytes = f.read()',
-        },
-        {
-          num: 7,
-          title: 'Response streamed back to the browser',
-          lines: ['Travels back through nginx (re-encrypted over HTTPS) to the browser.'],
-          code: 'return Response(content=pdf_bytes, media_type="application/pdf", ...)',
-        },
-        {
-          num: 8,
-          title: 'Browser triggers the download',
-          lines: ['Creates a temporary in-browser object URL, fake-clicks a download link with your chosen filename, then revokes the URL.'],
-          code: "const blob = await res.blob();\nconst url = URL.createObjectURL(blob);\na.download = sanitizeFilename(filenameInput.value) + '.pdf';\na.click();",
-        },
-      ],
-    };
-  }
-}
+  const stepsEl = document.getElementById('steps');
+  steps.forEach(step => {
+    const div = document.createElement('div');
+    div.className = 'step';
+    div.innerHTML = `
+      <div class="num">STEP ${step.num}</div>
+      <div class="title">${step.title}</div>
+      ${step.lines.map(l => `<p>${l}</p>`).join('')}
+      ${step.code ? `<pre>${step.code.replace(/</g, '&lt;')}</pre>` : ''}
+    `;
+    stepsEl.appendChild(div);
+  });
 </script>
 </body>
 </html>
