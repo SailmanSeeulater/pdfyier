@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>pdfyier — images to PDF</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
@@ -322,6 +323,20 @@
     color: #8A7B6C;
   }
 
+  .footer-link {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8A7B6C;
+    cursor: pointer;
+  }
+
+  .footer-link:hover { color: #F62440; }
+
   footer .note {
     font-family: 'Space Mono', monospace;
     font-size: 11px;
@@ -452,6 +467,26 @@
     line-height: 1.6;
     margin: 0;
   }
+
+  .info-block p {
+    color: #4A4038;
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 0 0 14px;
+  }
+
+  .info-block p strong {
+    color: #2A211A;
+    font-weight: 600;
+  }
+
+  .info-block code {
+    background: #FFFAF3;
+    border: 1px solid rgba(42,33,26,0.12);
+    padding: 1px 5px;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+  }
 </style>
 </head>
 <body>
@@ -494,9 +529,9 @@
 
   <footer>
     <div class="links">
-      <a href="#">Privacy</a>
-      <a href="#">Terms</a>
-      <a href="#">Help</a>
+      <button class="footer-link" id="privacy-btn">Privacy</button>
+      <button class="footer-link" id="terms-btn">Terms</button>
+      <button class="footer-link" id="help-btn">Help</button>
     </div>
     <div class="note">Powered by ImageMagick</div>
   </footer>
@@ -517,6 +552,72 @@
        → magick CLI (decode images → render PDF pages) → FastAPI reads result
        → temp files deleted → PDF streamed back → browser downloads it</pre>
       <p>Everything between steps 4–6 happens inside a single HTTP request/response cycle — nothing persists before or after.</p>
+    </div>
+  </div>
+</div>
+
+<div class="backdrop" id="privacy-backdrop">
+  <div class="panel" id="privacy-panel">
+    <div class="panel-head">
+      <span class="label">Privacy</span>
+      <button class="panel-close" id="privacy-close">&times;</button>
+    </div>
+    <h2>Your files are never stored.</h2>
+    <div class="info-block">
+      <p>pdfyier converts your images to a PDF and sends it straight back to your browser. Nothing about the process is designed to keep a copy.</p>
+      <p><strong>What happens to your files:</strong></p>
+      <p>Uploaded images are held only in memory (RAM-backed temporary storage, never written to disk) for the few seconds it takes to build your PDF. The moment your download starts, that memory is cleared — on the server and inside the container that runs the conversion.</p>
+      <p><strong>What we log:</strong></p>
+      <p>Standard web server logs record your IP address, the time of the request, and the response status — the same information any website's server logs by default. We do not log filenames, file contents, or anything from inside your upload.</p>
+      <p><strong>Third parties:</strong></p>
+      <p>None. Conversion happens entirely on our own server. Your files are never sent anywhere else.</p>
+      <p><strong>Accounts and cookies:</strong></p>
+      <p>There are none. pdfyier doesn't require sign-in and doesn't set tracking cookies.</p>
+    </div>
+  </div>
+</div>
+
+<div class="backdrop" id="terms-backdrop">
+  <div class="panel" id="terms-panel">
+    <div class="panel-head">
+      <span class="label">Terms</span>
+      <button class="panel-close" id="terms-close">&times;</button>
+    </div>
+    <h2>Plain-language terms.</h2>
+    <div class="info-block">
+      <p>pdfyier is a free tool provided as-is. By using it, you agree to the following:</p>
+      <p><strong>Use it lawfully.</strong></p>
+      <p>Don't upload files you don't have the right to use, or use the tool for anything illegal.</p>
+      <p><strong>No guarantees.</strong></p>
+      <p>pdfyier is offered without warranty of any kind. We aim for it to work reliably, but we can't promise it will be available every moment or handle every file perfectly.</p>
+      <p><strong>Limits keep it fair for everyone.</strong></p>
+      <p>File size and request limits exist to keep the service usable for all visitors, not just to be restrictive.</p>
+      <p><strong>Changes.</strong></p>
+      <p>These terms may be updated as the tool evolves. Continued use means you accept the current version.</p>
+    </div>
+  </div>
+</div>
+
+<div class="backdrop" id="help-backdrop">
+  <div class="panel" id="help-panel">
+    <div class="panel-head">
+      <span class="label">Help</span>
+      <button class="panel-close" id="help-close">&times;</button>
+    </div>
+    <h2>Quick answers.</h2>
+    <div class="info-block">
+      <p><strong>How do I add images?</strong></p>
+      <p>Click the dropzone to choose files, or drag images directly onto it from your computer.</p>
+      <p><strong>How do I change the page order?</strong></p>
+      <p>Drag any thumbnail to a new position before converting. The number in the top-left corner of each image shows its page order.</p>
+      <p><strong>Can I rename the download?</strong></p>
+      <p>Yes — use the "File name" field above the Convert button. It always saves as a <code>.pdf</code>.</p>
+      <p><strong>What file types are supported?</strong></p>
+      <p>JPG, PNG, WEBP, BMP, TIFF, and GIF, up to 20MB each.</p>
+      <p><strong>Why did my upload fail?</strong></p>
+      <p>Usually one of: a file over the size limit, an unsupported format, or too many conversions in a short time. Wait a moment and try again.</p>
+      <p><strong>Is there a limit on file count?</strong></p>
+      <p>Up to 50 images per conversion, 150MB combined.</p>
     </div>
   </div>
 </div>
@@ -705,15 +806,22 @@
     }
   });
 
-  const backdrop = document.getElementById('backdrop');
-  const explainBtn = document.getElementById('explain-btn');
-  const panelClose = document.getElementById('panel-close');
-  const panel = document.getElementById('panel');
+  function wirePanel(btnId, backdropId, panelId, closeId) {
+    const btn = document.getElementById(btnId);
+    const backdrop = document.getElementById(backdropId);
+    const panel = document.getElementById(panelId);
+    const close = document.getElementById(closeId);
 
-  explainBtn.addEventListener('click', () => backdrop.classList.add('open'));
-  panelClose.addEventListener('click', () => backdrop.classList.remove('open'));
-  backdrop.addEventListener('click', () => backdrop.classList.remove('open'));
-  panel.addEventListener('click', (e) => e.stopPropagation());
+    btn.addEventListener('click', () => backdrop.classList.add('open'));
+    close.addEventListener('click', () => backdrop.classList.remove('open'));
+    backdrop.addEventListener('click', () => backdrop.classList.remove('open'));
+    panel.addEventListener('click', (e) => e.stopPropagation());
+  }
+
+  wirePanel('explain-btn', 'backdrop', 'panel', 'panel-close');
+  wirePanel('privacy-btn', 'privacy-backdrop', 'privacy-panel', 'privacy-close');
+  wirePanel('terms-btn', 'terms-backdrop', 'terms-panel', 'terms-close');
+  wirePanel('help-btn', 'help-backdrop', 'help-panel', 'help-close');
 
   const steps = [
     { num: 1, title: 'Browser — user drops/selects images', lines: ["The page's JS collects the files into an items[] array (in whatever order you set via drag)."] },
