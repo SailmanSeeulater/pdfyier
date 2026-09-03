@@ -7,8 +7,7 @@ RUN apt-get update && \
 
 # ImageMagick's default policy.xml blocks PDF read/write for security reasons.
 # We need to allow it since that's the whole point of this service.
-RUN sed -i 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' /etc/ImageMagick-6/policy.xml || \
-    sed -i 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' /etc/ImageMagick-7/policy.xml || true
+RUN sed -i 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' /etc/ImageMagick-7/policy.xml || true
 
 WORKDIR /app
 
