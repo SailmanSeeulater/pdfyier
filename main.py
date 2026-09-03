@@ -13,7 +13,7 @@ app = FastAPI(title="Image to PDF Service")
 # Tighten allow_origins to your actual domain once deployed.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://pdfyier.latesailor.dev", "http://localhost:5500"],
     allow_methods=["*"],
     allow_headers=["*"],
 )

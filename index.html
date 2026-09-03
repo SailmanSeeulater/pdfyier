@@ -229,9 +229,10 @@
 
 <script>
   // Point this at your deployed API. Defaults to localhost for local testing.
-  const API_URL = window.location.hostname === 'localhost'
+  const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+  const API_URL = isLocal
     ? 'http://localhost:8000'
-    : 'https://pdf.latesailor.dev'; // update after deploy
+    : 'https://pdfyier.latesailor.dev';
 
   const MAX_FILE_SIZE = 20 * 1024 * 1024;
 
