@@ -109,7 +109,39 @@
     background: var(--card);
     border-radius: 6px;
     font-size: 14px;
+    cursor: grab;
   }
+
+  .file-row.dragging {
+    opacity: 0.4;
+  }
+
+  .file-row.drag-over-top {
+    box-shadow: inset 0 2px 0 var(--accent);
+  }
+
+  .file-row.drag-over-bottom {
+    box-shadow: inset 0 -2px 0 var(--accent);
+  }
+
+  .file-row .reorder {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .file-row .reorder button {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 10px;
+    line-height: 1;
+    padding: 2px 4px;
+  }
+
+  .file-row .reorder button:hover:not(:disabled) { color: var(--paper); }
+  .file-row .reorder button:disabled { opacity: 0.25; cursor: not-allowed; }
 
   .file-row .page-num {
     font-family: 'IBM Plex Mono', monospace;
@@ -142,6 +174,51 @@
   }
 
   .file-row .remove:hover { color: var(--accent); }
+
+  .filename-row {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .filename-row label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .filename-input-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+  }
+
+  .filename-input-wrap:focus-within {
+    border-color: var(--accent);
+  }
+
+  #filename-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--paper);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    min-width: 0;
+  }
+
+  .filename-input-wrap .ext {
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+  }
 
   .actions {
     margin-top: 24px;
@@ -206,7 +283,7 @@
 <main>
   <p class="eyebrow">pdfyier</p>
   <h1>Turn images into one PDF</h1>
-  <p class="sub">Drop images below in the order you want them to appear. Files are processed in memory and permanently deleted the moment your PDF is ready — never written to disk, never logged.</p>
+  <p class="sub">Drop images below, then drag rows or use the arrows to set page order. Files are processed in memory and permanently deleted the moment your PDF is ready — never written to disk, never logged.</p>
 
   <div class="dropzone" id="dropzone">
     <div class="icon">&#8595;</div>
@@ -216,6 +293,14 @@
   </div>
 
   <div id="file-list"></div>
+
+  <div class="filename-row" id="filename-row" style="display:none;">
+    <label for="filename-input">File name</label>
+    <div class="filename-input-wrap">
+      <input type="text" id="filename-input" value="output" spellcheck="false">
+      <span class="ext">.pdf</span>
+    </div>
+  </div>
 
   <div class="actions" id="actions" style="display:none;">
     <button class="convert" id="convert-btn">Convert to PDF</button>
@@ -239,6 +324,8 @@
   const dropzone = document.getElementById('dropzone');
   const fileInput = document.getElementById('file-input');
   const fileListEl = document.getElementById('file-list');
+  const filenameRow = document.getElementById('filename-row');
+  const filenameInput = document.getElementById('filename-input');
   const actionsEl = document.getElementById('actions');
   const convertBtn = document.getElementById('convert-btn');
   const clearBtn = document.getElementById('clear-btn');
@@ -279,33 +366,103 @@
     render();
   }
 
+  function moveFile(idx, direction) {
+    const newIdx = idx + direction;
+    if (newIdx < 0 || newIdx >= files.length) return;
+    [files[idx], files[newIdx]] = [files[newIdx], files[idx]];
+    render();
+  }
+
   function formatSize(bytes) {
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   }
+
+  function sanitizeFilename(name) {
+    const cleaned = name.trim().replace(/[\\/:*?"<>|]/g, '').replace(/\.+$/, '');
+    return cleaned || 'output';
+  }
+
+  let dragSrcIdx = null;
 
   function render() {
     fileListEl.innerHTML = '';
     files.forEach((f, idx) => {
       const row = document.createElement('div');
       row.className = 'file-row';
+      row.draggable = true;
+      row.dataset.idx = idx;
 
       const oversized = f.size > MAX_FILE_SIZE;
 
       row.innerHTML = `
+        <span class="reorder">
+          <button class="move-up" data-idx="${idx}" ${idx === 0 ? 'disabled' : ''} title="Move up" aria-label="Move up">&#9650;</button>
+          <button class="move-down" data-idx="${idx}" ${idx === files.length - 1 ? 'disabled' : ''} title="Move down" aria-label="Move down">&#9660;</button>
+        </span>
         <span class="page-num">${idx + 1}</span>
         <span class="name">${f.name}</span>
         <span class="size" style="${oversized ? 'color:var(--accent)' : ''}">${formatSize(f.size)}${oversized ? ' — too large' : ''}</span>
-        <button class="remove" data-idx="${idx}">&times;</button>
+        <button class="remove" data-idx="${idx}" title="Remove" aria-label="Remove">&times;</button>
       `;
+
+      row.addEventListener('dragstart', (e) => {
+        dragSrcIdx = idx;
+        row.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+
+      row.addEventListener('dragend', () => {
+        row.classList.add('dragging');
+        row.classList.remove('dragging');
+        fileListEl.querySelectorAll('.file-row').forEach(r => {
+          r.classList.remove('drag-over-top', 'drag-over-bottom');
+        });
+      });
+
+      row.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        const rect = row.getBoundingClientRect();
+        const midpoint = rect.top + rect.height / 2;
+        row.classList.toggle('drag-over-top', e.clientY < midpoint);
+        row.classList.toggle('drag-over-bottom', e.clientY >= midpoint);
+      });
+
+      row.addEventListener('dragleave', () => {
+        row.classList.remove('drag-over-top', 'drag-over-bottom');
+      });
+
+      row.addEventListener('drop', (e) => {
+        e.preventDefault();
+        row.classList.remove('drag-over-top', 'drag-over-bottom');
+        if (dragSrcIdx === null || dragSrcIdx === idx) return;
+
+        const rect = row.getBoundingClientRect();
+        const midpoint = rect.top + rect.height / 2;
+        let targetIdx = e.clientY < midpoint ? idx : idx + 1;
+        if (dragSrcIdx < targetIdx) targetIdx--;
+
+        const [moved] = files.splice(dragSrcIdx, 1);
+        files.splice(targetIdx, 0, moved);
+        dragSrcIdx = null;
+        render();
+      });
+
       fileListEl.appendChild(row);
     });
 
     fileListEl.querySelectorAll('.remove').forEach(btn => {
       btn.addEventListener('click', () => removeFile(parseInt(btn.dataset.idx)));
     });
+    fileListEl.querySelectorAll('.move-up').forEach(btn => {
+      btn.addEventListener('click', () => moveFile(parseInt(btn.dataset.idx), -1));
+    });
+    fileListEl.querySelectorAll('.move-down').forEach(btn => {
+      btn.addEventListener('click', () => moveFile(parseInt(btn.dataset.idx), 1));
+    });
 
     actionsEl.style.display = files.length ? 'flex' : 'none';
+    filenameRow.style.display = files.length ? 'flex' : 'none';
     convertBtn.disabled = files.length === 0;
 
     if (!files.length) statusEl.textContent = '';
@@ -314,6 +471,7 @@
   clearBtn.addEventListener('click', () => {
     files = [];
     render();
+    filenameInput.value = 'output';
     statusEl.textContent = '';
     statusEl.className = 'status';
   });
@@ -348,7 +506,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'output.pdf';
+      a.download = sanitizeFilename(filenameInput.value) + '.pdf';
       document.body.appendChild(a);
       a.click();
       a.remove();
