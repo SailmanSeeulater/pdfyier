@@ -305,6 +305,20 @@
 
   button.clear-all:hover { color: #2A211A; }
 
+  .progress-wrap {
+    margin-top: 20px;
+    height: 3px;
+    background: rgba(42,33,26,0.1);
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #F62440;
+    transition: width 0.15s ease;
+  }
+
   .status {
     margin-top: 18px;
     font-family: 'Space Mono', monospace;
@@ -537,6 +551,10 @@
     <button class="clear-all" id="clear-btn">Clear all</button>
   </div>
 
+  <div class="progress-wrap" id="progress-wrap" style="display:none;">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
   <div class="status" id="status"></div>
 
   <footer>
@@ -648,6 +666,8 @@
   const convertBtn = document.getElementById('convert-btn');
   const clearBtn = document.getElementById('clear-btn');
   const statusEl = document.getElementById('status');
+  const progressWrap = document.getElementById('progress-wrap');
+  const progressBar = document.getElementById('progress-bar');
   const clockEl = document.getElementById('clock');
 
   let items = []; // { id, file, url }
@@ -773,7 +793,7 @@
     statusEl.className = 'status';
   });
 
-  convertBtn.addEventListener('click', async () => {
+  convertBtn.addEventListener('click', () => {
     const oversized = items.filter(it => it.file.size > MAX_FILE_SIZE);
     if (oversized.length) {
       statusEl.textContent = `Remove oversized files first (${oversized.map(it => it.file.name).join(', ')})`;
@@ -783,39 +803,67 @@
 
     convertBtn.disabled = true;
     convertBtn.textContent = 'Converting…';
-    statusEl.textContent = 'Converting…';
+    statusEl.textContent = 'Uploading… 0%';
     statusEl.className = 'status';
+    progressWrap.style.display = 'block';
+    progressBar.style.width = '0%';
 
     const formData = new FormData();
     items.forEach(it => formData.append('files', it.file));
 
-    try {
-      const res = await fetch(`${API_URL}/convert`, { method: 'POST', body: formData });
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', `${API_URL}/convert`);
+    xhr.responseType = 'blob';
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ detail: 'Conversion failed' }));
-        throw new Error(err.detail || 'Conversion failed');
+    xhr.upload.addEventListener('progress', (e) => {
+      if (!e.lengthComputable) return;
+      const pct = Math.round((e.loaded / e.total) * 100);
+      progressBar.style.width = pct + '%';
+      if (pct < 100) {
+        statusEl.textContent = `Uploading… ${pct}%`;
+      } else {
+        statusEl.textContent = 'Processing…';
       }
+    });
 
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = sanitizeFilename(filenameInput.value) + '.pdf';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-
-      statusEl.textContent = 'Done — download started.';
-      statusEl.className = 'status success';
-    } catch (err) {
-      statusEl.textContent = err.message;
-      statusEl.className = 'status error';
-    } finally {
+    xhr.onload = async () => {
       convertBtn.disabled = false;
       convertBtn.textContent = 'Convert to PDF';
-    }
+      progressWrap.style.display = 'none';
+
+      if (xhr.status >= 200 && xhr.status < 300) {
+        const url = URL.createObjectURL(xhr.response);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = sanitizeFilename(filenameInput.value) + '.pdf';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+
+        statusEl.textContent = 'Done — download started.';
+        statusEl.className = 'status success';
+      } else {
+        let message = 'Conversion failed';
+        try {
+          const text = await xhr.response.text();
+          const parsed = JSON.parse(text);
+          message = parsed.detail || message;
+        } catch (_) {}
+        statusEl.textContent = message;
+        statusEl.className = 'status error';
+      }
+    };
+
+    xhr.onerror = () => {
+      convertBtn.disabled = false;
+      convertBtn.textContent = 'Convert to PDF';
+      progressWrap.style.display = 'none';
+      statusEl.textContent = 'Network error — please try again.';
+      statusEl.className = 'status error';
+    };
+
+    xhr.send(formData);
   });
 
   function wirePanel(btnId, backdropId, panelId, closeId) {
