@@ -1,0 +1,839 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-26T08:49:29+00:00",
+  "title": "Design System: pdfyier",
+  "extensions": {
+    "colorMeta": {
+      "sky-black": {
+        "role": "neutral",
+        "displayName": "Sky Black",
+        "canonical": "oklch(0% 0 0)",
+        "tonalRamp": [
+          "oklch(15% 0.000 0)",
+          "oklch(25% 0.000 0)",
+          "oklch(35% 0.000 0)",
+          "oklch(45% 0.000 0)",
+          "oklch(55% 0.000 0)",
+          "oklch(65% 0.000 0)",
+          "oklch(80% 0.000 0)",
+          "oklch(95% 0.000 0)"
+        ],
+        "theme": "dark"
+      },
+      "ink-white": {
+        "role": "neutral",
+        "displayName": "Ink White",
+        "canonical": "oklch(97% 0.003 286)",
+        "tonalRamp": [
+          "oklch(15% 0.001 286)",
+          "oklch(25% 0.001 286)",
+          "oklch(35% 0.001 286)",
+          "oklch(45% 0.001 286)",
+          "oklch(55% 0.001 286)",
+          "oklch(65% 0.002 286)",
+          "oklch(80% 0.002 286)",
+          "oklch(95% 0.003 286)"
+        ],
+        "theme": "dark"
+      },
+      "ink-silver": {
+        "role": "neutral",
+        "displayName": "Ink Silver",
+        "canonical": "oklch(71% 0.006 286)",
+        "tonalRamp": [
+          "oklch(15% 0.002 286)",
+          "oklch(25% 0.003 286)",
+          "oklch(35% 0.003 286)",
+          "oklch(45% 0.004 286)",
+          "oklch(55% 0.005 286)",
+          "oklch(65% 0.006 286)",
+          "oklch(80% 0.005 286)",
+          "oklch(95% 0.004 286)"
+        ],
+        "theme": "dark"
+      },
+      "ink-graphite": {
+        "role": "neutral",
+        "displayName": "Ink Graphite",
+        "canonical": "oklch(62% 0.008 286)",
+        "tonalRamp": [
+          "oklch(15% 0.003 286)",
+          "oklch(25% 0.004 286)",
+          "oklch(35% 0.005 286)",
+          "oklch(45% 0.006 286)",
+          "oklch(55% 0.007 286)",
+          "oklch(65% 0.008 286)",
+          "oklch(80% 0.006 286)",
+          "oklch(95% 0.005 286)"
+        ],
+        "theme": "dark"
+      },
+      "sheet-charcoal": {
+        "role": "neutral",
+        "displayName": "Sheet Charcoal",
+        "canonical": "oklch(22% 0.004 286)",
+        "tonalRamp": [
+          "oklch(15% 0.004 286)",
+          "oklch(25% 0.004 286)",
+          "oklch(35% 0.003 286)",
+          "oklch(45% 0.003 286)",
+          "oklch(55% 0.002 286)",
+          "oklch(65% 0.002 286)",
+          "oklch(80% 0.001 286)",
+          "oklch(95% 0.001 286)"
+        ],
+        "theme": "dark"
+      },
+      "field-charcoal": {
+        "role": "neutral",
+        "displayName": "Field Charcoal",
+        "canonical": "oklch(20% 0.004 286)",
+        "tonalRamp": [
+          "oklch(15% 0.004 286)",
+          "oklch(25% 0.004 286)",
+          "oklch(35% 0.003 286)",
+          "oklch(45% 0.003 286)",
+          "oklch(55% 0.002 286)",
+          "oklch(65% 0.002 286)",
+          "oklch(80% 0.001 286)",
+          "oklch(95% 0.001 286)"
+        ],
+        "theme": "dark"
+      },
+      "field-charcoal-hover": {
+        "role": "neutral",
+        "displayName": "Field Charcoal Hover",
+        "canonical": "oklch(24% 0.005 286)",
+        "tonalRamp": [
+          "oklch(15% 0.004 286)",
+          "oklch(25% 0.005 286)",
+          "oklch(35% 0.004 286)",
+          "oklch(45% 0.004 286)",
+          "oklch(55% 0.003 286)",
+          "oklch(65% 0.003 286)",
+          "oklch(80% 0.002 286)",
+          "oklch(95% 0.001 286)"
+        ],
+        "theme": "dark"
+      },
+      "control-graphite": {
+        "role": "neutral",
+        "displayName": "Control Graphite",
+        "canonical": "oklch(34% 0.005 286)",
+        "tonalRamp": [
+          "oklch(15% 0.004 286)",
+          "oklch(25% 0.004 286)",
+          "oklch(35% 0.005 286)",
+          "oklch(45% 0.004 286)",
+          "oklch(55% 0.004 286)",
+          "oklch(65% 0.003 286)",
+          "oklch(80% 0.002 286)",
+          "oklch(95% 0.001 286)"
+        ],
+        "theme": "dark"
+      },
+      "cobalt-lamp": {
+        "role": "primary",
+        "displayName": "Cobalt Lamp",
+        "canonical": "oklch(50% 0.26 266)",
+        "tonalRamp": [
+          "oklch(15% 0.151 266)",
+          "oklch(25% 0.182 266)",
+          "oklch(35% 0.213 266)",
+          "oklch(45% 0.244 266)",
+          "oklch(55% 0.244 266)",
+          "oklch(65% 0.213 266)",
+          "oklch(80% 0.166 266)",
+          "oklch(95% 0.120 266)"
+        ],
+        "theme": "dark"
+      },
+      "horizon-core": {
+        "role": "primary",
+        "displayName": "Horizon Core",
+        "canonical": "oklch(90% 0.045 272)",
+        "tonalRamp": [
+          "oklch(15% 0.011 272)",
+          "oklch(25% 0.011 272)",
+          "oklch(35% 0.015 272)",
+          "oklch(45% 0.021 272)",
+          "oklch(55% 0.026 272)",
+          "oklch(65% 0.032 272)",
+          "oklch(80% 0.040 272)",
+          "oklch(95% 0.042 272)"
+        ],
+        "theme": "dark"
+      },
+      "cobalt-signal": {
+        "role": "tertiary",
+        "displayName": "Cobalt Signal",
+        "canonical": "oklch(68% 0.16 272)",
+        "tonalRamp": [
+          "oklch(15% 0.058 272)",
+          "oklch(25% 0.077 272)",
+          "oklch(35% 0.097 272)",
+          "oklch(45% 0.116 272)",
+          "oklch(55% 0.135 272)",
+          "oklch(65% 0.154 272)",
+          "oklch(80% 0.137 272)",
+          "oklch(95% 0.108 272)"
+        ],
+        "theme": "dark"
+      },
+      "rose-lamp": {
+        "role": "secondary",
+        "displayName": "Rose Lamp",
+        "canonical": "oklch(67% 0.19 358)",
+        "tonalRamp": [
+          "oklch(15% 0.071 358)",
+          "oklch(25% 0.094 358)",
+          "oklch(35% 0.117 358)",
+          "oklch(45% 0.140 358)",
+          "oklch(55% 0.163 358)",
+          "oklch(65% 0.185 358)",
+          "oklch(80% 0.160 358)",
+          "oklch(95% 0.126 358)"
+        ],
+        "theme": "dark"
+      },
+      "rose-rim": {
+        "role": "secondary",
+        "displayName": "Rose Rim",
+        "canonical": "oklch(84% 0.09 355)",
+        "tonalRamp": [
+          "oklch(15% 0.022 355)",
+          "oklch(25% 0.026 355)",
+          "oklch(35% 0.037 355)",
+          "oklch(45% 0.048 355)",
+          "oklch(55% 0.059 355)",
+          "oklch(65% 0.069 355)",
+          "oklch(80% 0.086 355)",
+          "oklch(95% 0.078 355)"
+        ],
+        "theme": "dark"
+      },
+      "day-lamp": {
+        "role": "tertiary",
+        "displayName": "Day Lamp",
+        "canonical": "oklch(97% 0.015 60)",
+        "tonalRamp": [
+          "oklch(15% 0.004 60)",
+          "oklch(25% 0.004 60)",
+          "oklch(35% 0.004 60)",
+          "oklch(45% 0.006 60)",
+          "oklch(55% 0.007 60)",
+          "oklch(65% 0.009 60)",
+          "oklch(80% 0.012 60)",
+          "oklch(95% 0.015 60)"
+        ],
+        "theme": "dark"
+      },
+      "alert-red": {
+        "role": "neutral",
+        "displayName": "Alert Red",
+        "canonical": "oklch(65% 0.23 28)",
+        "tonalRamp": [
+          "oklch(15% 0.092 28)",
+          "oklch(25% 0.120 28)",
+          "oklch(35% 0.147 28)",
+          "oklch(45% 0.175 28)",
+          "oklch(55% 0.202 28)",
+          "oklch(65% 0.230 28)",
+          "oklch(80% 0.189 28)",
+          "oklch(95% 0.147 28)"
+        ],
+        "theme": "dark"
+      },
+      "paper-white": {
+        "role": "neutral",
+        "displayName": "Paper White",
+        "canonical": "oklch(98.5% 0.004 106)",
+        "tonalRamp": [
+          "oklch(15% 0.001 106)",
+          "oklch(25% 0.001 106)",
+          "oklch(35% 0.001 106)",
+          "oklch(45% 0.001 106)",
+          "oklch(55% 0.002 106)",
+          "oklch(65% 0.002 106)",
+          "oklch(80% 0.003 106)",
+          "oklch(95% 0.004 106)"
+        ],
+        "theme": "paper"
+      },
+      "paper-ink": {
+        "role": "neutral",
+        "displayName": "Paper Ink",
+        "canonical": "oklch(26% 0.03 270)",
+        "tonalRamp": [
+          "oklch(15% 0.026 270)",
+          "oklch(25% 0.030 270)",
+          "oklch(35% 0.027 270)",
+          "oklch(45% 0.023 270)",
+          "oklch(55% 0.020 270)",
+          "oklch(65% 0.016 270)",
+          "oklch(80% 0.011 270)",
+          "oklch(95% 0.007 270)"
+        ],
+        "theme": "paper"
+      },
+      "paper-ink-soft": {
+        "role": "neutral",
+        "displayName": "Paper Ink Soft",
+        "canonical": "oklch(45% 0.03 270)",
+        "tonalRamp": [
+          "oklch(15% 0.019 270)",
+          "oklch(25% 0.023 270)",
+          "oklch(35% 0.026 270)",
+          "oklch(45% 0.030 270)",
+          "oklch(55% 0.026 270)",
+          "oklch(65% 0.023 270)",
+          "oklch(80% 0.017 270)",
+          "oklch(95% 0.012 270)"
+        ],
+        "theme": "paper"
+      },
+      "paper-ink-faint": {
+        "role": "neutral",
+        "displayName": "Paper Ink Faint",
+        "canonical": "oklch(50% 0.03 270)",
+        "tonalRamp": [
+          "oklch(15% 0.017 270)",
+          "oklch(25% 0.021 270)",
+          "oklch(35% 0.025 270)",
+          "oklch(45% 0.028 270)",
+          "oklch(55% 0.028 270)",
+          "oklch(65% 0.025 270)",
+          "oklch(80% 0.019 270)",
+          "oklch(95% 0.014 270)"
+        ],
+        "theme": "paper"
+      },
+      "ballpoint-blue": {
+        "role": "primary",
+        "displayName": "Ballpoint Blue",
+        "canonical": "oklch(37% 0.16 266)",
+        "tonalRamp": [
+          "oklch(15% 0.118 266)",
+          "oklch(25% 0.137 266)",
+          "oklch(35% 0.156 266)",
+          "oklch(45% 0.145 266)",
+          "oklch(55% 0.125 266)",
+          "oklch(65% 0.106 266)",
+          "oklch(80% 0.077 266)",
+          "oklch(95% 0.049 266)"
+        ],
+        "theme": "paper"
+      },
+      "ballpoint-blue-hover": {
+        "role": "primary",
+        "displayName": "Ballpoint Blue Hover",
+        "canonical": "oklch(44% 0.18 266)",
+        "tonalRamp": [
+          "oklch(15% 0.117 266)",
+          "oklch(25% 0.139 266)",
+          "oklch(35% 0.161 266)",
+          "oklch(45% 0.178 266)",
+          "oklch(55% 0.156 266)",
+          "oklch(65% 0.135 266)",
+          "oklch(80% 0.102 266)",
+          "oklch(95% 0.070 266)"
+        ],
+        "theme": "paper"
+      },
+      "red-pen": {
+        "role": "secondary",
+        "displayName": "Red Pen",
+        "canonical": "oklch(53% 0.19 27)",
+        "tonalRamp": [
+          "oklch(15% 0.103 27)",
+          "oklch(25% 0.126 27)",
+          "oklch(35% 0.149 27)",
+          "oklch(45% 0.172 27)",
+          "oklch(55% 0.185 27)",
+          "oklch(65% 0.163 27)",
+          "oklch(80% 0.128 27)",
+          "oklch(95% 0.094 27)"
+        ],
+        "theme": "paper"
+      },
+      "notebook-rule": {
+        "role": "neutral",
+        "displayName": "Notebook Rule",
+        "canonical": "oklch(90% 0.025 250)",
+        "tonalRamp": [
+          "oklch(15% 0.006 250)",
+          "oklch(25% 0.006 250)",
+          "oklch(35% 0.008 250)",
+          "oklch(45% 0.011 250)",
+          "oklch(55% 0.015 250)",
+          "oklch(65% 0.017 250)",
+          "oklch(80% 0.022 250)",
+          "oklch(95% 0.024 250)"
+        ],
+        "theme": "paper"
+      },
+      "margin-red": {
+        "role": "neutral",
+        "displayName": "Margin Red",
+        "canonical": "oklch(66% 0.14 22)",
+        "tonalRamp": [
+          "oklch(15% 0.054 22)",
+          "oklch(25% 0.071 22)",
+          "oklch(35% 0.088 22)",
+          "oklch(45% 0.105 22)",
+          "oklch(55% 0.122 22)",
+          "oklch(65% 0.138 22)",
+          "oklch(80% 0.116 22)",
+          "oklch(95% 0.091 22)"
+        ],
+        "theme": "paper"
+      },
+      "highlighter-yellow": {
+        "role": "tertiary",
+        "displayName": "Highlighter Yellow",
+        "canonical": "oklch(91% 0.18 99)",
+        "tonalRamp": [
+          "oklch(15% 0.045 99)",
+          "oklch(25% 0.045 99)",
+          "oklch(35% 0.059 99)",
+          "oklch(45% 0.081 99)",
+          "oklch(55% 0.102 99)",
+          "oklch(65% 0.124 99)",
+          "oklch(80% 0.156 99)",
+          "oklch(95% 0.171 99)"
+        ],
+        "theme": "paper"
+      },
+      "masking-tape": {
+        "role": "neutral",
+        "displayName": "Masking Tape",
+        "canonical": "oklch(91% 0.04 90)",
+        "tonalRamp": [
+          "oklch(15% 0.010 90)",
+          "oklch(25% 0.010 90)",
+          "oklch(35% 0.013 90)",
+          "oklch(45% 0.018 90)",
+          "oklch(55% 0.023 90)",
+          "oklch(65% 0.028 90)",
+          "oklch(80% 0.035 90)",
+          "oklch(95% 0.038 90)"
+        ],
+        "theme": "paper"
+      },
+      "photo-white": {
+        "role": "neutral",
+        "displayName": "Photo White",
+        "canonical": "oklch(100% 0 0)",
+        "tonalRamp": [
+          "oklch(15% 0.000 0)",
+          "oklch(25% 0.000 0)",
+          "oklch(35% 0.000 0)",
+          "oklch(45% 0.000 0)",
+          "oklch(55% 0.000 0)",
+          "oklch(65% 0.000 0)",
+          "oklch(80% 0.000 0)",
+          "oklch(95% 0.000 0)"
+        ],
+        "theme": "paper"
+      },
+      "fill-1": {
+        "role": "neutral",
+        "displayName": "Fill 1",
+        "theme": "dark"
+      },
+      "fill-2": {
+        "role": "neutral",
+        "displayName": "Fill 2",
+        "theme": "dark"
+      },
+      "fill-3": {
+        "role": "neutral",
+        "displayName": "Fill 3",
+        "theme": "dark"
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "theme": "dark"
+      },
+      "paper-fill-1": {
+        "role": "neutral",
+        "displayName": "Paper Fill 1",
+        "theme": "paper"
+      },
+      "paper-fill-2": {
+        "role": "neutral",
+        "displayName": "Paper Fill 2",
+        "theme": "paper"
+      },
+      "paper-fill-3": {
+        "role": "neutral",
+        "displayName": "Paper Fill 3",
+        "theme": "paper"
+      },
+      "paper-hairline": {
+        "role": "neutral",
+        "displayName": "Paper Hairline",
+        "theme": "paper"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The single page headline (dark). 56px at <=1068px, 40px at <=734px."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section heads; pipeline section one step down at 32px."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "Subhead and section ledes, max 30em."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Fact terms, FAQ questions, empty-stage prompt, step names (17-24px)."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text and controls."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Stage detail, status line, formats, text buttons; tabular numbers."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Nav links, theme toggle, footer fine print."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Pipeline code block."
+      },
+      "paper-display": {
+        "displayName": "Paper Display",
+        "purpose": "Kalam headline in ballpoint blue, rotated -0.6deg, key phrase highlighted. 44px on phones."
+      },
+      "paper-headline": {
+        "displayName": "Paper Headline",
+        "purpose": "Kalam section heads set inline over a highlighter band."
+      },
+      "paper-note": {
+        "displayName": "Paper Note",
+        "purpose": "Kalam notes: detail line, field label, page numbers, add tile. Never controls or body."
+      }
+    },
+    "shadows": [
+      {
+        "name": "page-rest-dark",
+        "value": "0 26px 34px -18px rgb(0 0 0 / 0.95), 0 10px 14px -8px rgb(0 0 0 / 0.8)",
+        "purpose": "Every page at rest in the dark theme."
+      },
+      {
+        "name": "page-grabbed-dark",
+        "value": "0 40px 50px -20px #000, 0 16px 24px -10px rgb(0 0 0 / 0.9)",
+        "purpose": "Page lifted while being moved."
+      },
+      {
+        "name": "ghost-lift-dark",
+        "value": "0 50px 60px -24px #000, 0 20px 30px -12px rgb(0 0 0 / 0.9)",
+        "purpose": "Drag ghost at full lift."
+      },
+      {
+        "name": "rim-light",
+        "value": "inset 0 0 0 0.5px rgb(255 255 255 / 0.12), inset 0 -1.5px 0 rgb(36 72 255 / calc(0.25 + var(--lx-cobalt) * 0.55))",
+        "purpose": "Page lower edge catching the horizon; rose rim (inset 0 -2px 0 rgb(255 184 208 / 0.95)) once sent."
+      },
+      {
+        "name": "page-rest-paper",
+        "value": "0 1px 1px rgb(31 36 51 / 0.1), 0 10px 18px -10px rgb(31 36 51 / 0.4)",
+        "purpose": "Taped photo at rest."
+      },
+      {
+        "name": "page-grabbed-paper",
+        "value": "0 22px 30px -14px rgb(31 36 51 / 0.45)",
+        "purpose": "Paper photo lifted."
+      },
+      {
+        "name": "floating-control-dark",
+        "value": "0 2px 10px rgb(0 0 0 / 0.6)",
+        "purpose": "Remove button."
+      },
+      {
+        "name": "floating-control-paper",
+        "value": "0 1px 4px rgb(31 36 51 / 0.25), inset 0 0 0 1px rgb(31 36 51 / 0.14)",
+        "purpose": "Remove button, paper."
+      },
+      {
+        "name": "hairline-rule",
+        "value": "inset 0 -1px 0 var(--hair)",
+        "purpose": "The only separator between FAQ rows, nav and footer rows."
+      },
+      {
+        "name": "focus-ring-field",
+        "value": "0 0 0 2px var(--cobalt-hi)",
+        "purpose": "Filename field focus (dark); paper uses inset 0 -2px 0 var(--pen)."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Arrivals, lifts, lamp rises, page enter (560ms, 40ms stagger), theme circle (650ms)."
+      },
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+        "purpose": "Settles, FLIP reflow (340ms), progress, rose level, press."
+      },
+      {
+        "name": "ease-exit",
+        "value": "cubic-bezier(0.4, 0, 1, 1)",
+        "purpose": "Page removal (180ms)."
+      },
+      {
+        "name": "lamp-cobalt",
+        "value": "1.4s",
+        "purpose": "--lx-cobalt transition."
+      },
+      {
+        "name": "lamp-rose",
+        "value": "0.6s",
+        "purpose": "--lx-rose transition; tracks upload fraction 0.08-0.80."
+      },
+      {
+        "name": "lamp-day",
+        "value": "2.2s",
+        "purpose": "--lx-day transition when the PDF lands."
+      },
+      {
+        "name": "lamp-surge",
+        "value": "0.35s",
+        "purpose": "--lx-surge while files hover the window."
+      },
+      {
+        "name": "sheen",
+        "value": "0.9s",
+        "purpose": "Light crossing a page as its bytes leave."
+      },
+      {
+        "name": "breathe",
+        "value": "2.8s ease-in-out infinite",
+        "purpose": "Rose pulse while the server builds the PDF."
+      },
+      {
+        "name": "long-press",
+        "value": "260ms",
+        "purpose": "Touch drag start; also ghost settle duration."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce",
+        "purpose": "Sheen and pulse off, tick drawn, drag animations 0.01s, theme switch instant."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "md",
+        "value": "1068px"
+      },
+      {
+        "name": "sm",
+        "value": "734px"
+      },
+      {
+        "name": "touch",
+        "value": "(hover: none) and (pointer: coarse)"
+      }
+    ],
+    "themes": {
+      "attribute": "data-theme on <html>",
+      "values": [
+        "dark",
+        "paper"
+      ],
+      "default": "prefers-color-scheme (light -> paper, dark -> dark); the user's pick is remembered in localStorage 'pdfyier-theme'",
+      "switch": "circular view transition opening from the toggle, 650ms cubic-bezier(0.16, 1, 0.3, 1); instant under reduced motion"
+    },
+    "lightLevels": {
+      "properties": [
+        "--lx-cobalt",
+        "--lx-rose",
+        "--lx-day",
+        "--lx-surge"
+      ],
+      "registered": "@property <number>, inherits",
+      "phases": {
+        "night": {
+          "cobalt": 0.3
+        },
+        "first": {
+          "cobalt": 0.85
+        },
+        "dawn": {
+          "cobalt": 1,
+          "rose": "0.08 + upload fraction * 0.72"
+        },
+        "day": {
+          "cobalt": 1,
+          "rose": 0.45,
+          "day": 1
+        },
+        "error": {
+          "cobalt": 0.2
+        },
+        "dropping": {
+          "surge": 1
+        }
+      },
+      "paperMapping": "light layers hidden; --progress drives the highlighter scaleX; red-pen checks on sent pages and the done tick"
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Pill",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Create PDF: the one white pill in the dark theme.",
+      "html": "<button class=\"ds-pill\">Create PDF</button> <button class=\"ds-pill\" disabled>Create PDF</button>",
+      "css": ".ds-pill{height:50px;padding:0 28px;border:0;border-radius:999px;background:#f5f5f7;color:#000;font:600 17px/1 -apple-system,BlinkMacSystemFont,'SF Pro Text',Inter,system-ui,sans-serif;letter-spacing:-0.015em;cursor:pointer;transition:background .2s,color .2s,transform .15s cubic-bezier(.2,.8,.2,1)}.ds-pill:hover:not(:disabled){background:#fff}.ds-pill:active:not(:disabled){transform:scale(.97)}.ds-pill:focus-visible{outline:2px solid #7c95ff;outline-offset:3px}.ds-pill:disabled{background:#1d1d1f;color:#86868b;cursor:default}"
+    },
+    {
+      "name": "Secondary Pill",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Choose Images: translucent fill pill on black.",
+      "html": "<button class=\"ds-pill2\">Choose Images</button>",
+      "css": ".ds-pill2{height:44px;padding:0 22px;border:0;border-radius:999px;background:rgb(255 255 255 / .11);color:#f5f5f7;font:500 17px/1 -apple-system,BlinkMacSystemFont,'SF Pro Text',Inter,system-ui,sans-serif;letter-spacing:-0.015em;cursor:pointer;transition:background .2s,transform .15s}.ds-pill2:hover{background:rgb(255 255 255 / .16)}.ds-pill2:active{transform:scale(.97)}.ds-pill2:focus-visible{outline:2px solid #7c95ff;outline-offset:3px}"
+    },
+    {
+      "name": "Filename Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Solid dark field with inline label and fixed .pdf suffix.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-l\">File name</span><input value=\"output\"><span class=\"ds-field-x\">.pdf</span></label>",
+      "css": ".ds-field{display:flex;align-items:center;gap:10px;width:420px;min-height:50px;padding:12px 16px;border-radius:14px;background:#161618;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',Inter,system-ui,sans-serif;cursor:text;transition:background .2s,box-shadow .2s}.ds-field:hover{background:#1f1f22}.ds-field:focus-within{background:#1f1f22;box-shadow:0 0 0 2px #7c95ff}.ds-field-l{color:#86868b;font-size:15px}.ds-field input{flex:1;min-width:0;padding:0;border:0;outline:none;background:none;color:#f5f5f7;caret-color:#7c95ff;font:inherit;font-size:17px}.ds-field-x{color:#86868b;font-size:17px}"
+    },
+    {
+      "name": "Local Nav",
+      "kind": "nav",
+      "refersTo": "theme-toggle",
+      "description": "52px translucent bar: wordmark, caption links, theme toggle pill.",
+      "html": "<header class=\"ds-nav\"><a class=\"ds-wm\" href=\"#\">pdfyier</a><div class=\"ds-right\"><nav class=\"ds-links\"><a href=\"#\">Privacy</a><a href=\"#\">How it works</a><a href=\"#\">Help</a></nav><button class=\"ds-toggle\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 13l.9-3.4L11.4 2.1a1.4 1.4 0 0 1 2 0l.5.5a1.4 1.4 0 0 1 0 2L6.4 12.1 3 13z\"/><path d=\"M10.2 3.3l2.5 2.5\"/></svg>Paper</button></div></header>",
+      "css": ".ds-nav{height:52px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;background:rgb(0 0 0 / .72);backdrop-filter:saturate(180%) blur(20px);box-shadow:inset 0 -1px 0 rgb(255 255 255 / .08);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',Inter,system-ui,sans-serif}.ds-wm{color:#f5f5f7;text-decoration:none;font-size:21px;font-weight:600;letter-spacing:-0.02em}.ds-right{display:flex;align-items:center;gap:20px}.ds-links{display:flex;gap:24px}.ds-links a{color:#a1a1a6;text-decoration:none;font-size:12px;transition:color .2s}.ds-links a:hover{color:#f5f5f7}.ds-toggle{height:30px;padding:0 12px 0 10px;border:0;border-radius:999px;background:rgb(255 255 255 / .07);color:#f5f5f7;display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:12px;cursor:pointer;transition:background .2s}.ds-toggle:hover{background:rgb(255 255 255 / .11)}.ds-toggle:focus-visible,.ds-links a:focus-visible,.ds-wm:focus-visible{outline:2px solid #7c95ff;outline-offset:3px}"
+    },
+    {
+      "name": "Page on a Pool of Light",
+      "kind": "custom",
+      "refersTo": "page-badge",
+      "description": "A page at true aspect with number badge, cobalt rim light and its floor pool; lifts on hover as when grabbed.",
+      "html": "<div class=\"ds-stage\"><div class=\"ds-page\"><div class=\"ds-sheet\"><span class=\"ds-badge\">1</span></div><span class=\"ds-pool\"></span></div></div>",
+      "css": ".ds-stage{padding:28px 40px 8px;background:#000;display:flex;justify-content:center}.ds-page{display:inline-flex;flex-direction:column;align-items:center;padding:0 12px}.ds-sheet{position:relative;height:176px;width:132px;border-radius:3px;background:#f4f2ec;box-shadow:0 26px 34px -18px rgb(0 0 0 / .95),0 10px 14px -8px rgb(0 0 0 / .8),inset 0 -1.5px 0 rgb(36 72 255 / .8);transition:transform .35s cubic-bezier(.16,1,.3,1)}.ds-page:hover .ds-sheet{transform:translateY(-10px) scale(1.04)}.ds-badge{position:absolute;left:6px;bottom:7px;min-width:22px;height:22px;padding:0 7px;border-radius:11px;background:rgb(0 0 0 / .62);color:#fff;font:600 12px/22px -apple-system,BlinkMacSystemFont,'SF Pro Text',Inter,system-ui,sans-serif;text-align:center}.ds-pool{position:relative;align-self:stretch;height:26px;margin:0 -8px;background:radial-gradient(34% 55% at 50% 0%,rgb(0 0 0 / .75),transparent 100%),radial-gradient(50% 100% at 50% 0%,rgb(36 72 255 / .6),transparent 100%)}.ds-pool::before{content:'';position:absolute;top:0;left:5%;right:5%;height:1px;background:linear-gradient(90deg,transparent,rgb(36 72 255),transparent)}"
+    },
+    {
+      "name": "Horizon Line",
+      "kind": "custom",
+      "refersTo": "horizon",
+      "description": "The one full-bleed line with a near-white core and cobalt glow above; rides the dock's top edge.",
+      "html": "<div class=\"ds-hz\"><span class=\"ds-hz-glow\"></span><span class=\"ds-hz-line\"></span></div>",
+      "css": ".ds-hz{position:relative;height:220px;background:#000;overflow:hidden}.ds-hz-glow{position:absolute;left:0;right:0;bottom:40px;height:180px;background:radial-gradient(70% 100% at 50% 100%,rgb(36 72 255 / .5) 0%,rgb(36 72 255 / .17) 36%,transparent 72%)}.ds-hz-line{position:absolute;left:0;right:0;bottom:40px;height:1px;background:linear-gradient(90deg,transparent 0%,rgb(36 72 255 / .75) 16%,rgb(214 222 255) 50%,rgb(36 72 255 / .75) 84%,transparent 100%)}.ds-hz-line::after{content:'';position:absolute;inset:-3px 12%;background:inherit;filter:blur(5px)}"
+    },
+    {
+      "name": "Paper Primary Button",
+      "kind": "button",
+      "refersTo": "paper-button-primary",
+      "description": "Blue-ink hand-looped Create PDF button; the label stays in print.",
+      "html": "<button class=\"ds-ppill\">Create PDF</button>",
+      "css": ".ds-ppill{height:50px;padding:0 28px;border:0;border-radius:255px 20px 225px 20px / 20px 225px 20px 255px;background:#1d3a9a;color:#fff;font:600 17px/1 -apple-system,BlinkMacSystemFont,'SF Pro Text',Inter,system-ui,sans-serif;letter-spacing:-0.015em;cursor:pointer;transition:background .2s,transform .15s}.ds-ppill:hover{background:#2447b8}.ds-ppill:active{transform:scale(.97)}.ds-ppill:focus-visible{outline:2px solid #1d3a9a;outline-offset:3px}"
+    },
+    {
+      "name": "Paper Secondary Button",
+      "kind": "button",
+      "refersTo": "paper-button-secondary",
+      "description": "Pen-drawn outline loop with a highlighter wash on hover.",
+      "html": "<button class=\"ds-ppill2\">Choose Images</button>",
+      "css": ".ds-ppill2{height:44px;padding:0 22px;border:0;border-radius:255px 18px 225px 18px / 18px 225px 18px 255px;background:transparent;color:#1d3a9a;box-shadow:inset 0 0 0 2px #1d3a9a;font:500 17px/1 -apple-system,BlinkMacSystemFont,'SF Pro Text',Inter,system-ui,sans-serif;letter-spacing:-0.015em;cursor:pointer;transition:background .2s,transform .15s}.ds-ppill2:hover{background:rgb(255 226 64 / .35)}.ds-ppill2:active{transform:scale(.97)}.ds-ppill2:focus-visible{outline:2px solid #1d3a9a;outline-offset:3px}"
+    },
+    {
+      "name": "Paper Filename Line",
+      "kind": "input",
+      "refersTo": "paper-field",
+      "description": "A name written on a line: underline only, handwritten label, highlighter on focus.",
+      "html": "<label class=\"ds-pfield\"><span class=\"ds-pfield-l\">File name</span><input value=\"output\"><span class=\"ds-pfield-x\">.pdf</span></label>",
+      "css": ".ds-pfield{display:flex;align-items:center;gap:10px;width:420px;min-height:50px;padding:12px 16px;background:transparent;box-shadow:inset 0 -2px 0 rgb(29 58 154 / .45);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',Inter,system-ui,sans-serif;cursor:text;transition:background .2s,box-shadow .2s}.ds-pfield:hover{box-shadow:inset 0 -2px 0 rgb(29 58 154 / .7)}.ds-pfield:focus-within{background:rgb(255 226 64 / .2);box-shadow:inset 0 -2px 0 #1d3a9a}.ds-pfield-l{color:#5f6576;font-family:Kalam,'Bradley Hand','Segoe Print',cursive;font-size:18px}.ds-pfield input{flex:1;min-width:0;padding:0;border:0;outline:none;background:none;color:#1f2433;caret-color:#1d3a9a;font:inherit;font-size:17px}.ds-pfield-x{color:#5f6576;font-size:17px}"
+    },
+    {
+      "name": "Taped Photo Page",
+      "kind": "custom",
+      "refersTo": "paper-page-badge",
+      "description": "Page taped into the ruled notebook at a slight tilt, number circled in red pen.",
+      "html": "<div class=\"ds-nb\"><div class=\"ds-tp\"><span class=\"ds-tape\"></span><span class=\"ds-circ\">1</span></div></div>",
+      "css": ".ds-nb{padding:30px 40px;background-color:#fbfbf8;background-image:linear-gradient(180deg,transparent 31px,#d3e2f1 31px,#d3e2f1 32px,transparent 32px);background-size:100% 32px}.ds-tp{position:relative;height:176px;width:132px;border-radius:1px;background:#fff;box-shadow:0 1px 1px rgb(31 36 51 / .1),0 10px 18px -10px rgb(31 36 51 / .4);rotate:-0.9deg;transition:rotate .35s cubic-bezier(.16,1,.3,1),transform .35s cubic-bezier(.16,1,.3,1)}.ds-tp:hover{transform:scale(1.06);rotate:-2.5deg}.ds-tape{position:absolute;top:-9px;left:50%;width:58px;height:20px;translate:-50% 0;rotate:-0.2deg;background:rgb(236 226 196 / .78);box-shadow:0 1px 2px rgb(31 36 51 / .14)}.ds-circ{position:absolute;left:6px;bottom:7px;min-width:26px;height:26px;padding:0 6px;background:#fff;color:#c62f2e;border:1.5px solid currentColor;border-radius:55% 45% 52% 48% / 48% 55% 45% 52%;font:700 15px/22px Kalam,'Bradley Hand','Segoe Print',cursive;text-align:center}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Lit Stage and the Notebook",
+    "overview": "pdfyier is one converter shown in two materials that share a single skeleton. In the dark, the page is a cyclorama before dawn: a depthless black sky, one full-bleed horizon line with a near-white core riding the top edge of the dock, and pages standing at their true aspect on pools of floor light. The light is the progress indicator. Four registered number properties (cobalt, rose, day, surge) are set by the job's phase: night when empty, cobalt first light once pages are set, rose dawn climbing with the upload percentage, warm white day when the PDF lands. The mood is Apple's dark Pro pages: SF Pro on Apple devices, self-hosted Inter elsewhere, a white pill primary, solid dark fields.\n\nIn the light, the same stage becomes a ruled college notebook (user-pinned): blue rules every 32px under a blank header band, a red margin line, blue-ballpoint ink, Kalam handwriting for headings and notes only. Pages become photos taped in at a slight random tilt, page numbers are circled in red pen, and the lamps map to paper tools: a yellow highlighter grows along the line the pages sit on with upload %, each page gets a red-pen check as its bytes leave, and a red check marks the finished status. Theme follows `prefers-color-scheme`, is remembered, and switches through a circular view transition opening from the toggle.\n\nDensity is low and centered. Nothing is boxed: light (dark) or ruled lines and tape (paper) separate things, together with generous spacing.",
+    "keyCharacteristics": [
+      "One system, two theme-scoped token sets on `data-theme` (`dark` / `paper`); components change material, never structure.",
+      "State is carried by light (dark) or pen and highlighter (paper), always doubled by status text and button labels.",
+      "Pages keep their true aspect ratio; the stage never crops them into a uniform grid.",
+      "A single horizon line on the dock's top edge, which floats with the dock when pages overflow.",
+      "Print type for everything you operate; handwriting only for what a student would write in."
+    ],
+    "rules": [
+      {
+        "name": "The Light Is the Progress Rule",
+        "body": "Lamp colours appear only as light: gradients, pools, rim edges and the horizon line, driven by `--lx-*` levels. Never use cobalt, rose or day as a flat button, card or text fill.",
+        "section": "colors"
+      },
+      {
+        "name": "The Earned Dawn Rule",
+        "body": "Rose appears only while bytes are leaving and Day only when a PDF has landed. No decorative sunrise at rest.",
+        "section": "colors"
+      },
+      {
+        "name": "The Three Tools Rule",
+        "body": "Paper colour is limited to what a student carries: blue ballpoint, red pen, yellow highlighter, plus the notebook's rules, margin and tape.",
+        "section": "colors"
+      },
+      {
+        "name": "The Print for Controls Rule",
+        "body": "Buttons, the filename input, body copy, status text and nav links are always SF Pro / Inter, in both themes. Kalam is reserved for headings, notes, labels and marks (wordmark, headings, detail line, field label, add tile, page numbers, step numbers).",
+        "section": "typography"
+      },
+      {
+        "name": "The Tracking Follows Size Rule",
+        "body": "Print tracking runs from -0.022em at display down to 0 at 12px. Handwriting is always 0.",
+        "section": "typography"
+      },
+      {
+        "name": "The No Box Rule",
+        "body": "No content cards and no bordered panels. Separation comes from light, spacing and single hairlines (`inset 0 1px 0` rules between FAQ items and footer rows). Filled, rounded surfaces are reserved for controls, code and the pages themselves.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Light Follows the Job Rule",
+        "body": "Every lamp level is set by phase or progress (`night`, `first`, `dawn`, `day`, `error`, plus `surge` while files hover). Nothing glows independently of state.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** drive every lamp from state: set `data-phase` and the `--lx-*` numbers, and let the registered properties fade (cobalt 1.4s, rose 0.6s, day 2.2s).",
+      "**Do** keep pages at their true aspect ratio: height from `--page-h`, width from the image's own ratio.",
+      "**Do** keep a text equivalent for every light phase in the status line and button labels.",
+      "**Do** use `cubic-bezier(0.16, 1, 0.3, 1)` for arrivals, lifts and lamps, and `cubic-bezier(0.2, 0.8, 0.2, 1)` for settles, reflows and progress. Under reduced motion, stop the sheen and pulse, show the tick fully drawn, and snap drags.",
+      "**Do** scope every paper change under `:root[data-theme=\"paper\"]` and change material only: ink, tape, rules, highlighter. Keep the layout identical across themes.",
+      "**Do** tilt each paper photo by its own random angle (±1.3deg) and circle its number in red pen.",
+      "**Do** self-host every font (Inter, Kalam); no visit touches a third party."
+    ],
+    "donts": [
+      "**Don't** put content in cards or bordered panels; light, spacing and single hairlines separate things.",
+      "**Don't** fill buttons, text or surfaces with cobalt, rose or day in the dark theme; they are light only.",
+      "**Don't** set buttons, the filename value, body copy or status text in Kalam.",
+      "**Don't** crop pages into uniform thumbnails or square tiles.",
+      "**Don't** add paper colours beyond blue ballpoint, red pen, yellow highlighter and the notebook's rule, margin and tape.",
+      "**Don't** show rose or day light while nothing is uploading or nothing has landed."
+    ]
+  }
+}

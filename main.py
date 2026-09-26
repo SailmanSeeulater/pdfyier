@@ -18,7 +18,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tiff", ".gif"}
+ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tif", ".tiff", ".gif"}
 MAX_FILES = 50
 MAX_FILE_SIZE = 20 * 1024 * 1024       # 20 MB per file
 MAX_TOTAL_SIZE = 150 * 1024 * 1024     # 150 MB per request
@@ -69,11 +69,20 @@ async def convert(files: list[UploadFile]):
             paths.append(path)
 
         output_path = os.path.join(tmp, "output.pdf")
-        cmd = ["magick", *paths, output_path]
+        # -auto-orient applies each photo's EXIF rotation, so portrait phone shots
+        # land upright in the PDF (they already look upright in the browser preview).
+        cmd = ["magick", *paths, "-auto-orient", output_path]
 
-        result = subprocess.run(cmd, capture_output=True, text=True)
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+        except subprocess.TimeoutExpired:
+            raise HTTPException(status_code=500, detail="Conversion took too long. Try fewer or smaller images.")
         if result.returncode != 0:
-            raise HTTPException(status_code=500, detail=f"Conversion failed: {result.stderr}")
+            # Keep ImageMagick's stderr (paths, versions) out of the response.
+            raise HTTPException(
+                status_code=500,
+                detail="Couldn't convert these images. One of them may be damaged or in an unusual format.",
+            )
 
         if not os.path.exists(output_path):
             raise HTTPException(status_code=500, detail="Conversion produced no output")

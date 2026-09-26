@@ -4,3 +4,7 @@ venv/
 .env
 output.pdf
 *.pdf
+
+# Impeccable working files (regenerated during design reviews)
+.impeccable/review/
+.impeccable/questions/

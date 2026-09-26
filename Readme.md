@@ -7,7 +7,8 @@ Turn a batch of images into a single PDF, right in the browser. Drag to reorder 
 ## What it does
 
 - Drop or select multiple images (JPG, PNG, WEBP, BMP, TIFF, GIF)
-- Reorder pages by dragging thumbnails
+- Reorder pages by dragging thumbnails (mouse, touch-and-hold, or keyboard)
+- Two looks: a dark stage and a ruled-notebook paper theme; follows the system setting, remembers your pick
 - Name the downloaded file
 - Converts everything into one multi-page PDF and streams it straight back
 
@@ -41,8 +42,14 @@ The whole pipeline runs inside a single request/response cycle. Nothing is writt
 
 ```
 pdfyier/
-├── index.html          # Frontend — drop zone, reorderable grid, filename input, info panels
+├── index.html          # Frontend — drop target, reorderable pages, filename, privacy/how/help sections
 ├── favicon.svg          # Site favicon
+├── apple-touch-icon.png # Home Screen icon (rendered from favicon.svg)
+├── fonts/
+│   ├── inter-latin.woff2 # Self-hosted Inter (used when SF Pro isn't available)
+│   └── kalam-*.woff2     # Handwriting for the paper theme (loads only when that theme is on)
+├── PRODUCT.md           # Product context for design work (Impeccable)
+├── DESIGN.md            # Visual system: tokens, components, motion (Impeccable)
 ├── main.py              # FastAPI app (/health, /convert)
 ├── requirements.txt      # Python dependencies
 ├── Dockerfile            # Python + ImageMagick, with PDF policy patch
@@ -77,15 +84,17 @@ Multipart form upload, field name `files` (repeatable, order = page order).
 - Max 50 files per request
 - Max 20MB per file
 - Max 150MB total per request
-- Allowed extensions: `.jpg`, `.jpeg`, `.png`, `.webp`, `.bmp`, `.tiff`, `.gif`
+- Allowed extensions: `.jpg`, `.jpeg`, `.png`, `.webp`, `.bmp`, `.tif`, `.tiff`, `.gif`
+- Conversion runs `magick <images> -auto-orient out.pdf`, so phone photos land upright; it times out after 120 s
 
 **Response:** `application/pdf` binary stream on success, JSON `{"detail": "..."}` with an appropriate 4xx/5xx status on failure.
 
 ## Deployment notes
 
-- `index.html` is served directly by nginx as a static file from `/var/www/pdfyier/` — it is **not** served from the git checkout, so after pulling changes on the server, copy the updated file into place:
+- `index.html` is served directly by nginx as a static file from `/var/www/pdfyier/` — it is **not** served from the git checkout, so after pulling changes on the server, copy the updated files into place (the font and touch icon are new):
   ```bash
-  sudo cp index.html favicon.svg /var/www/pdfyier/
+  sudo cp index.html favicon.svg apple-touch-icon.png robots.txt sitemap.xml /var/www/pdfyier/
+  sudo mkdir -p /var/www/pdfyier/fonts && sudo cp fonts/*.woff2 /var/www/pdfyier/fonts/
   ```
 - `main.py` changes require rebuilding the container:
   ```bash
@@ -101,6 +110,7 @@ Multipart form upload, field name `files` (repeatable, order = page order).
 - HTTPS everywhere (Certbot-managed cert, auto-renews)
 - No persistent storage — uploads and generated PDFs live only in RAM (`tmpfs`) for the duration of a single request
 - No database, no accounts, no cookies
+- No third-party requests from the page: the font is self-hosted, and Apple devices use their built-in SF Pro
 - Access logs capture only IP/timestamp/path/status — never filenames or file contents
 - File type allowlist and size limits enforced at both nginx and application level
 - Rate limiting on `/convert` (the only compute-heavy endpoint) to prevent abuse
