@@ -93,7 +93,7 @@ Multipart form upload, field name `files` (repeatable, order = page order).
 
 - `index.html` is served directly by nginx as a static file from `/var/www/pdfyier/` — it is **not** served from the git checkout, so after pulling changes on the server, copy the updated files into place (the font and touch icon are new):
   ```bash
-  sudo cp index.html favicon.svg apple-touch-icon.png robots.txt sitemap.xml /var/www/pdfyier/
+  sudo cp index.html favicon.svg apple-touch-icon.png og-image.png robots.txt sitemap.xml /var/www/pdfyier/
   sudo mkdir -p /var/www/pdfyier/fonts && sudo cp fonts/*.woff2 /var/www/pdfyier/fonts/
   ```
 - `main.py` changes require rebuilding the container:
